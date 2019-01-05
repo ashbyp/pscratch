@@ -29,7 +29,7 @@ def scan_files():
     for user in users:
         print('\nScanning, ', user)
         start = timer()
-        results = walk.get_largest_files(root='c:/users/%s' % user, how_many=20)
+        results = walk.get_largest_files(root='c:\\users\\%s' % user, how_many=20)
         end = timer()
         print('Scan took %s seconds' % (end - start))
         print('Results: Total size for %s is %s' % (user, misc.convert_size(sum([x[1] for x in results]))))
@@ -39,3 +39,5 @@ def scan_files():
 
 
 scan_files()
+#scan_dirs()
+

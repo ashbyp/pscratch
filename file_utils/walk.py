@@ -46,7 +46,7 @@ get_dirs_from_with_sizes = partial(apply_from,
                                    lambda d, f: None)
 
 
-def get_largest_files(root='.', skip_dirs=None, how_many=10):
+def get_largest_files(root='.', skip_dirs=None, how_many: int = 10):
     results = sorted(get_files_from_with_sizes(root=root, skip_dirs=skip_dirs),
                      reverse=True, key=lambda x: x[1])[:how_many]
     return results or []

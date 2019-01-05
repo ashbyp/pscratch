@@ -1,5 +1,6 @@
 import os
 from functools import partial
+from file_utils import misc
 
 PYTHON_PROJECT_SKIP_DIRS = {'__pycache__', 'venv', '.idea', '.git'}
 
@@ -41,15 +42,15 @@ list_paths_from = partial(apply_from,
                           lambda d, f: print('\t%s' % os.path.join(d, f)))
 
 list_from_with_sizes = partial(apply_from,
-                               lambda d: print('Found directory %s : %s' % (d, os.path.getsize(d))),
-                               lambda d, f: print('\t%s : %s' % (f, os.path.getsize(os.path.join(d, f)))))
+                               lambda d: print('Found directory %s : %s' % (d, misc.get_size(d))),
+                               lambda d, f: print('\t%s : %s' % (f, misc.get_size(os.path.join(d, f)))))
 
 get_files_from_with_sizes = partial(apply_from,
                                     lambda d: None,
-                                    lambda d, f: (f, os.path.getsize(os.path.join(d, f))))
+                                    lambda d, f: (f, misc.get_size(os.path.join(d, f))))
 
 get_dirs_from_with_sizes = partial(apply_from,
-                                   lambda d: (d, os.path.getsize(d)),
+                                   lambda d: (d, misc.get_size(d)),
                                    lambda d, f: None)
 
 

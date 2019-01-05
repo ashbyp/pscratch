@@ -1,4 +1,4 @@
-import math
+import math, os
 
 
 def convert_size(size_bytes):
@@ -9,3 +9,11 @@ def convert_size(size_bytes):
     p = math.pow(1024, i)
     s = round(size_bytes / p, 2)
     return "%s %s" % (s, size_name[i])
+
+
+def get_size(full_path):
+    try:
+        return os.path.getsize(full_path)
+    except OSError as e:
+        print(e)
+    return 0

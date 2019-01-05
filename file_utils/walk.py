@@ -1,32 +1,23 @@
 import os
 from functools import partial
-from file_utils import misc
+from . import misc
 
 PYTHON_PROJECT_SKIP_DIRS = {'__pycache__', 'venv', '.idea', '.git'}
 
 
 def apply_from(dir_fn, file_fn, root='.', skip_dirs=None):
-    if skip_dirs is None:
-        skip_dirs = {}
-    file_results = []
-    dir_results = []
+    skip_dirs = set(skip_dirs) if skip_dirs else {}
+    results = []
     for dir_name, subdir_list, file_list in os.walk(root):
         result = dir_fn(dir_name)
         if result:
-            dir_results.append(result)
+            results.append(result)
         for file_name in file_list:
             result = file_fn(dir_name, file_name)
             if result:
-                file_results.append(result)
+                results.append(result)
         _do_skip_dirs(subdir_list, skip_dirs)
-    if dir_results and file_results:
-        return dir_results, file_results
-    elif dir_results:
-        return dir_results
-    elif file_results:
-        return file_results
-    else:
-        return None
+    return results or None
 
 
 list_from = partial(apply_from,
@@ -47,7 +38,7 @@ list_from_with_sizes = partial(apply_from,
 
 get_files_from_with_sizes = partial(apply_from,
                                     lambda d: None,
-                                    lambda d, f: (f, misc.get_size(os.path.join(d, f))))
+                                    lambda d, f: (os.path.join(d, f), misc.get_size(os.path.join(d, f))))
 
 get_dirs_from_with_sizes = partial(apply_from,
                                    lambda d: (d, misc.get_size(d)),
@@ -55,16 +46,12 @@ get_dirs_from_with_sizes = partial(apply_from,
 
 
 def get_largest_files(root='.', skip_dirs=None, how_many=10):
-    if skip_dirs is None:
-        skip_dirs = {}
     results = sorted(get_files_from_with_sizes(root=root, skip_dirs=skip_dirs),
                      reverse=True, key=lambda x: x[1])[:how_many]
     return results or []
 
 
 def get_largest_dirs(root='.', skip_dirs=None, how_many=10):
-    if skip_dirs is None:
-        skip_dirs = {}
     results = sorted(get_dirs_from_with_sizes(root=root, skip_dirs=skip_dirs),
                      reverse=True, key=lambda x: x[1])[:how_many]
     return results or []
@@ -72,7 +59,6 @@ def get_largest_dirs(root='.', skip_dirs=None, how_many=10):
 
 def _do_skip_dirs(sub_dirs, skip_dirs):
     if skip_dirs and sub_dirs:
-        skip_dirs = set(skip_dirs)
         x = 0
         while x < len(sub_dirs):
             if sub_dirs[x] in skip_dirs:

@@ -11,9 +11,10 @@ def convert_size(size_bytes):
     return "%s %s" % (s, size_name[i])
 
 
-def get_size(full_path):
+def get_size(full_path, eat_exceptions=True):
     try:
         return os.path.getsize(full_path)
     except OSError as e:
-        print(e)
+        if not eat_exceptions:
+            print(e)
     return 0

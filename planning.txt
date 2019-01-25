@@ -1,0 +1,11 @@
+what unit testing framework
+django or flask
+project structure
+deploy locally
+deploy on server
+deploy on
+    - amazon
+    - gcloud
+what db(s)
+api
+editor

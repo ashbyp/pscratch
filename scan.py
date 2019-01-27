@@ -39,5 +39,4 @@ def scan_files():
 
 
 scan_files()
-#scan_dirs()
-
+# scan_dirs()

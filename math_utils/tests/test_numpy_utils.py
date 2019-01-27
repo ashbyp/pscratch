@@ -11,5 +11,3 @@ class TestAllUtils(TestCase):
         self.assertEqual(a.size, 60)
 
 
-
-

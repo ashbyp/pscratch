@@ -1,30 +1,27 @@
 import socket
 
-HOST = '127.0.0.1'
-PORT = 65432
 
-
-def server():
+def server(host, port):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind((HOST, PORT))
-        s.listen()
-        conn, addr = s.accept()
-        with conn:
-            print('Connected by', addr)
-            while True:
-                data = conn.recv(1024)
-                if not data:
-                    break
-                conn.sendall(data)
+        s.bind((host, port))
+        while True:
+            s.listen()
+            conn, address = s.accept()
+            with conn:
+                print('Connected by', address)
+                while True:
+                    data = conn.recv(1024)
+                    if not data:
+                        print('No data, exit')
+                        break
+                    conn.sendall(data)
 
 
-def client():
+def client(host, port, msg='Hello, World!'):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.connect((HOST, PORT))
-        s.sendall(b'Hello, world')
+        s.connect((host, port))
+        s.sendall(bytes(msg, 'utf8'))
         data = s.recv(1024)
         print('Received', repr(data))
-
-
 
 

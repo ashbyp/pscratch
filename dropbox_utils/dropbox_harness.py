@@ -1,6 +1,10 @@
 import dropbox
 
-TOK = 'YzhCOnmeCxcAAAAAAAAXJCYc57j6CHEgMH2XZ4_gale3nwuVQ8RsEY12uYbKTJXA'
+TOK = ''
+with open('private.txt', 'r') as f:
+    TOK = f.read()
+
+print(TOK)
 
 dbx = dropbox.Dropbox(TOK)
 

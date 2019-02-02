@@ -9,3 +9,6 @@ deploy on
 what db(s)
 api
 editor
+travis
+pip
+

@@ -2,16 +2,17 @@ import math
 import colorsys
 import turtle
 
-
 phi = 180 * (3 - math.sqrt(5))
 
 t = turtle.Pen()
 t.speed(0)
 
+
 def square(t, size):
     for tmp in range(0, 4):
         t.forward(size)
         t.right(90)
+
 
 num = 200
 

@@ -24,7 +24,7 @@ def download_all_sites(sites):
         executor.map(download_site, sites)
 
 
-if __name__ == "__main__":
+def run():
     sites = [
         "http://www.jython.org",
         "http://olympus.realpython.org/dice",
@@ -33,3 +33,8 @@ if __name__ == "__main__":
     download_all_sites(sites)
     duration = time.time() - start_time
     print(f"Downloaded {len(sites)} in {duration} seconds")
+    return duration
+
+
+if __name__ == '__main__':
+    run()

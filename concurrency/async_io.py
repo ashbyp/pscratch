@@ -17,7 +17,7 @@ async def download_all_sites(sites):
         await asyncio.gather(*tasks, return_exceptions=True)
 
 
-if __name__ == "__main__":
+def run():
     sites = [
         "http://www.jython.org",
         "http://olympus.realpython.org/dice",
@@ -26,3 +26,9 @@ if __name__ == "__main__":
     asyncio.get_event_loop().run_until_complete(download_all_sites(sites))
     duration = time.time() - start_time
     print(f"Downloaded {len(sites)} sites in {duration} seconds")
+    return duration
+
+
+if __name__ == '__main__':
+    run()
+

@@ -1,16 +1,25 @@
 import requests
+import multiprocessing
 import time
 
+session = None
 
-def download_site(url, session):
+
+def set_global_session():
+    global session
+    if not session:
+        session = requests.Session()
+
+
+def download_site(url):
     with session.get(url) as response:
-        print(f"Read {len(response.content)} from {url}")
+        name = multiprocessing.current_process().name
+        print(f"{name}:Read {len(response.content)} from {url}")
 
 
 def download_all_sites(sites):
-    with requests.Session() as session:
-        for url in sites:
-            download_site(url, session)
+    with multiprocessing.Pool(initializer=set_global_session) as pool:
+        pool.map(download_site, sites)
 
 
 def run():
@@ -24,5 +33,7 @@ def run():
     print(f"Downloaded {len(sites)} in {duration} seconds")
     return duration
 
+
 if __name__ == '__main__':
+    multiprocessing.freeze_support()
     run()

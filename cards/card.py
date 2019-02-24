@@ -8,13 +8,54 @@ SUITS = {
     'Spade': 3,
 }
 SUIT_NAMES = tuple(SUITS.keys())
+SHORT_SUITS_MAP = {k[0]: k for k in SUITS.keys()}
+
+PICTURES = {
+    'Jack': 11,
+    'Queen': 12,
+    'King': 13,
+    'Ace': 1
+}
+
+SHORT_PICTURES = {k[0]: v for k, v in PICTURES.items()}
+RANK_TO_PICTURES = {v: k for k, v in PICTURES.items()}
 
 
 class Card:
-    def __init__(self, suit, rank):
+    def __init__(self, rank, suit):
+        try:
+            self._rank = int(rank)
+            if self._rank < 0 or self._rank > 13:
+                raise ValueError('rank must be between 1-13')
+        except ValueError as e:
+            raise ValueError("rank must be an integer", e)
+
+        if suit not in SUIT_NAMES:
+            raise ValueError(f'suit must be one of {SUIT_NAMES}')
         self._suit = suit
-        self._rank = rank
         self._value = self._rank if self._rank < 11 else 10
+
+    @staticmethod
+    def from_str(card_name):
+        # AD 1D ad 1d  - all ace diamonds
+        # 10S 10s - both 10 spades
+        # 5C 5c - both 5 clubs
+        # JH Jh 11H 11h - all jack of hearts
+        card_name = card_name.upper()
+        rank_str = card_name[0:2] if len(card_name) == 3 else card_name[0]
+        if rank_str in SHORT_PICTURES:
+            rank = int(SHORT_PICTURES[rank_str])
+        else:
+            rank = int(rank_str)
+
+        short_suit_name = card_name[-1]
+        if short_suit_name not in SHORT_SUITS_MAP:
+            raise ValueError(f'short suit name must be one of {SHORT_SUITS_MAP.keys()}')
+        return Card(rank, SHORT_SUITS_MAP[card_name[-1]])
+
+    @staticmethod
+    def from_str_list(card_names):
+        return [Card.from_str(name) for name in card_names.replace(' ', '').split(',')]
 
     @property
     def suit(self):
@@ -29,7 +70,7 @@ class Card:
         return self._value
 
     def str_rank(self):
-        return {11: 'Jack', 12: 'Queen', 13: 'King', 1: 'Ace'}.get(self._rank, str(self._rank))
+        return RANK_TO_PICTURES.get(self._rank, str(self._rank))
 
     def _cmp(self, other):
         if self.rank != other.rank:
@@ -90,7 +131,7 @@ class Deck:
 
 
 def standard_deck():
-    return [Card(s, v) for s in SUIT_NAMES for v in range(1, 14)]
+    return [Card(r, s) for r in range(1, 14) for s in SUIT_NAMES]
 
 
 def split_suits(cards):
@@ -121,6 +162,7 @@ def same_suit_runs(cards, min_run_size):
 
 
 def is_run(cards):
+    cards = sorted(cards)
     for i in range(0, len(cards) - 1):
         if cards[i].rank != cards[i+1].rank - 1:
             return False
@@ -128,18 +170,22 @@ def is_run(cards):
 
 
 def any_suit_runs(cards, min_run_size):
-    results = []
-
-    def find(run_size):
-        for comb in itertools.combinations(cards, run_size):
-            s = sorted(comb)
-            if is_run(s):
-                results.append(list(s))
+    potential = []
 
     for i in range(min_run_size, len(cards) + 1):
-        find(i)
+        for comb in itertools.combinations(cards, i):
+            if is_run(comb):
+                potential.append(set(comb))
 
-    return results
+    deduped = []
+    for s in potential:
+        subset = False
+        for o in potential:
+            if s.issubset(o) and s is not o:
+                subset = True
+        if not subset:
+            deduped.append(list(s))
+    return deduped
 
 
 def flushes(cards, min_flush_size):
@@ -148,12 +194,4 @@ def flushes(cards, min_flush_size):
 
 def pairs(hand):
     return [list(comb) for comb in itertools.combinations(hand, 2) if comb[0].rank == comb[1].rank]
-
-
-if __name__ == '__main__':
-    h = [
-        Card('S', 3),
-        Card('H', 3),
-        Card('D', 3)
-    ]
 

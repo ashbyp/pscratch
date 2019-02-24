@@ -3,13 +3,13 @@ import itertools
 
 
 def runs(hand, turn_card):
-    # TODO: does not work, include  3,4,5 and 3,4,5,6 as different runs
     return card.any_suit_runs(hand + [turn_card], 3)
 
 
 def flushes(hand, turn_card):
     if card.flushes(hand, 4):
-        return card.flushes(hand + [turn_card], 5)
+        x = card.flushes(hand + [turn_card], 4)
+        return card.flushes(hand + [turn_card], 4)
     return []
 
 
@@ -37,14 +37,33 @@ def nob(hand, turn_card):
     return False
 
 
-def score_hand(hand, turn_card):
-    score = sum(len(r) for r in runs(hand, turn_card))
-    score += sum(len(f) for f in flushes(hand, turn_card))
-    score += len(fifteens(hand, turn_card)) * 2
-    score += len(pairs(hand, turn_card)) * 2
-    if nob(hand, turn_card):
+def break_down(hand, turn_card):
+    return {
+        'runs': runs(hand, turn_card),
+        'flushes': flushes(hand, turn_card),
+        'fifteens': fifteens(hand, turn_card),
+        'pairs': pairs(hand, turn_card),
+        'nob': nob(hand, turn_card)
+    }
+
+
+def score_breakdown(bd):
+    score = sum(len(r) for r in bd['runs'])
+    score += sum(len(f) for f in bd['flushes'])
+    score += len(bd['fifteens']) * 2
+    score += len(bd['pairs']) * 2
+    if bd['nob']:
         score += 1
     return score
+
+
+def score_hand(hand, turn_card):
+    return score_breakdown(break_down(hand, turn_card))
+
+
+def score_hand_with_breakdown(hand, turn_card):
+    bd = break_down(hand, turn_card)
+    return score_breakdown(bd), bd
 
 
 if __name__ == '__main__':

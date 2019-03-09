@@ -46,4 +46,10 @@ class TestCard(TestCase):
         self.assertEqual(Card.from_str('11H'), self.jack_of_hearts)
         self.assertEqual(Card.from_str('11h'), self.jack_of_hearts)
 
+    def test_set_equality(self):
+        c1 = Card.from_str('JH')
+        c2 = Card.from_str('JH')
+        self.assertEqual(c1, c2)
+        self.assertEqual(set([c1]), set([c2]))
+
 

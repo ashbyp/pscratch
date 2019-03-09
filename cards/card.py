@@ -103,7 +103,7 @@ class Card:
         return '{0} of {1}s'.format(self.str_rank(), self._suit)
 
     def __hash__(self):
-        return id(self)
+        return hash(self.__repr__())
 
 
 class Deck:

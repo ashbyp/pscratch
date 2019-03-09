@@ -4,7 +4,26 @@ import concurrent.futures
 import multiprocessing
 
 from cards import card
-from cards import crib
+from cards import crib_score
+
+
+def attempts_for_score_v1(deck, score, verbose=False):
+    if verbose:
+        print(f'Looking for score of {score}')
+    attempts = 1
+    while True:
+        deck.shuffle()
+        h = deck.deal_one(4)
+        t = deck.next_card()
+        hs = crib_score.score_hand(h, t)
+        deck.return_cards(h)
+        deck.return_card(t)
+        if hs == score:
+            if verbose:
+                print(f'Found score of {score} after {attempts} attempts')
+            break
+        attempts += 1
+    return attempts
 
 
 def attempts_for_score(deck, score, verbose=False):
@@ -13,9 +32,10 @@ def attempts_for_score(deck, score, verbose=False):
     attempts = 1
     while True:
         deck.shuffle()
-        h = deck.deal_one(4)
+        h = deck.deal_one(6)
+        sh = crib_score.choose_best_hand(h, 4)
         t = deck.next_card()
-        hs = crib.score_hand(h, t)
+        hs = crib_score.score_hand(sh[0][1], t)
         deck.return_cards(h)
         deck.return_card(t)
         if hs == score:

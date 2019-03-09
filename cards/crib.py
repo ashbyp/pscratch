@@ -8,7 +8,6 @@ def runs(hand, turn_card):
 
 def flushes(hand, turn_card):
     if card.flushes(hand, 4):
-        x = card.flushes(hand + [turn_card], 4)
         return card.flushes(hand + [turn_card], 4)
     return []
 

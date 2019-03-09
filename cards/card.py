@@ -120,11 +120,17 @@ class Deck:
                 dealt[j].append(self._cards.pop())
         return dealt
 
+    def deal_one(self, num_cards):
+        return [self._cards.pop() for _ in range(num_cards)]
+
     def cards_remaining(self):
         return len(self._cards)
 
     def next_card(self):
-        return self._cards.pop()
+        return self._cards.pop(0)
+
+    def return_card(self, returned):
+        self._cards.append(returned)
 
     def return_cards(self, returned):
         self._cards.extend(returned)

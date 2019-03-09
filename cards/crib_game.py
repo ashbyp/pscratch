@@ -4,10 +4,21 @@ from cards import card
 class Player:
     def __init__(self, name):
         self._name = name
+        self._score = 0
 
     @property
     def name(self):
         return self._name
+
+    @property
+    def score(self):
+        return self._score
+
+    def add_to_score(self, points):
+        self._score += points
+
+    def choose_discards(self, hand):
+        raise NotImplementedError()
 
 
 class HumanPlayer(Player):
@@ -26,11 +37,14 @@ class ComputerPlayer(Player):
 
 class CribGame:
 
-    def __init__(self, players):
+    def __init__(self, players, target_score):
         self._players = players
         self._num_players = len(self._players)
-        self._deck = card.Deck()
-        self._scores = [0] * self._num_players
+
+        if self._num_players != 2:
+            raise ValueError('2 player cribbage only')
+
+        self._target_score = target_score
 
         print(' **************************** ')
         print(f' Welcome to Cribbage {len(players)} players')
@@ -38,14 +52,15 @@ class CribGame:
             print(f'    {p.name}')
         print(' **************************** ')
 
+    def _check_win(self):
+        for player in self._players:
+            if player.score >= self._target_score:
+                return player
+        return None
+
     def play(self):
-        self._deck.shuffle()
-
-        hands = self._deck.deal(self._num_players, 6)
-
-        for p in self._players:
-            p
-
+        deck = card.Deck()
+        deck.shuffle()
 
 if __name__ == '__main__':
     ps = [
@@ -53,5 +68,14 @@ if __name__ == '__main__':
         ComputerPlayer()
     ]
 
-    game = CribGame(ps)
+    game = CribGame(ps, 121)
     game.play()
+
+
+
+
+
+
+
+
+

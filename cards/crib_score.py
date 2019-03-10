@@ -80,7 +80,7 @@ def choose_best_hand(hand, hand_size):
         if not best:
             best = [(score, comb)]
         elif score > best[0][0]:
-            best = [(score, comb)]
+            best = [(score,  comb)]
         elif score == best[0][0]:
             best.append((score, comb))
 

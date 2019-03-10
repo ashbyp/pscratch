@@ -69,19 +69,19 @@ def run(score, num_attempts, fn):
 
 
 if __name__ == '__main__':
-    run(12, 100, multi_attempts_for_score)
-    run(12, 100, multi_attempts_for_score_threaded)
-    run(12, 100, multi_attempts_for_score_multi_process)
-    run(12, 1000, multi_attempts_for_score)
-    run(12, 1000, multi_attempts_for_score_threaded)
-    run(12, 1000, multi_attempts_for_score_multi_process)
+    # run(12, 100, multi_attempts_for_score)
+    # run(12, 100, multi_attempts_for_score_threaded)
+    # run(12, 100, multi_attempts_for_score_multi_process)
+    # run(12, 1000, multi_attempts_for_score)
+    # run(12, 1000, multi_attempts_for_score_threaded)
+    # run(12, 1000, multi_attempts_for_score_multi_process)
+    #
+    # run(20, 100, multi_attempts_for_score)
+    # run(20, 100, multi_attempts_for_score_threaded)
+    # run(20, 100, multi_attempts_for_score_multi_process)
+    #
+    # run(0, 100, multi_attempts_for_score)
+    # run(0, 100, multi_attempts_for_score_threaded)
+    # run(0, 100, multi_attempts_for_score_multi_process)
 
-    run(20, 100, multi_attempts_for_score)
-    run(20, 100, multi_attempts_for_score_threaded)
-    run(20, 100, multi_attempts_for_score_multi_process)
-
-    run(0, 100, multi_attempts_for_score)
-    run(0, 100, multi_attempts_for_score_threaded)
-    run(0, 100, multi_attempts_for_score_multi_process)
-
-    run(29, 5, multi_attempts_for_score_multi_process)
+    run(29, 20, multi_attempts_for_score_multi_process)

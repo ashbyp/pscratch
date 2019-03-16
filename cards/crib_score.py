@@ -82,6 +82,10 @@ def score_hand_with_breakdown(hand, turn_card, is_box=False):
     bd = break_down(hand, turn_card, is_box)
     return score_breakdown(bd), bd
 
+def score_pegging_stack(stack):
+    return 0, ''
+
+
 
 def choose_best_hand(hand, hand_size):
     best = []

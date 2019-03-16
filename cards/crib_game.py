@@ -119,19 +119,30 @@ class CribGame:
             raise ValueError('A player pegged for more that 31, debug you player')
         return total
 
+    @staticmethod
+    def score_pegging_stack(stack):
+        return crib_score.score_pegging_stack(stack)
+
     def play_pegging_card(self, player, stack, hand, turn_card, board):
         peg_card = player.next_pegging_card(stack, hand, turn_card)
         if peg_card:
             hand.remove(peg_card)
             stack.append(peg_card)
-            stack_score = self.stack_count(stack)
+            count = self.stack_count(stack)
+            stack_score, score_desc = self.score_pegging_stack(stack)
+
             msg = f'{player.name} pegged {peg_card}\n\n'
-            if stack_score in (15, 31):
-                msg += f'Stack Value: {stack_score}, 2 points for {player.name}\n'
+            if count in (15, 31):
+                msg += f'Stack Value: {count}, 2 points for {player.name}\n'
                 board.add_points(player, 2)
             else:
-                msg += f'Stack Value: {stack_score}\n'
+                msg += f'Stack Value: {count}\n'
+
+            if stack_score:
+                msg += f'Score :      {stack_score} for {score_desc}\n'
+
             msg += f'Stack:       {stack}\n'
+
             self._game_message(msg)
             return False
         else:
@@ -165,6 +176,8 @@ class CribGame:
                 if self.stack_count(stack) == 31:
                     self._game_message(f'Last player was {p1.name}, 1 point (stack at 31)')
                     board.add_points(p1, 1)
+                    if not (p1_hand or p2_hand):
+                        break
                     p1, p2 = p2, p1
                     p1_hand, p2_hand = p2_hand, p1_hand
                     reset_stack()
@@ -186,6 +199,8 @@ class CribGame:
                 if self.stack_count(stack) == 31:
                     self._game_message(f'Last player was {p2.name}, 1 point (stack at 31)')
                     board.add_points(p2, 1)
+                    if not (p1_hand or p2_hand):
+                        break
                     reset_stack()
                     continue
                 elif not (p1_hand or p2_hand):

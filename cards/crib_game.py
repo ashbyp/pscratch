@@ -35,9 +35,9 @@ class CribBoard:
 
 class CribGame:
 
-    def __init__(self, player1, player2, target_score, game_messages_enabled=True, trace_enabled=False):
+    def __init__(self, player1, player2, target_score, messages_enabled=True, trace_enabled=False):
         self._trace_enabled = trace_enabled
-        self._game_messages_enabled = game_messages_enabled
+        self._game_messages_enabled = messages_enabled
         self._player1 = player1
         self._player2 = player2
         self._target_score = target_score
@@ -112,52 +112,88 @@ class CribGame:
 
         return turn_card
 
+    @staticmethod
+    def stack_count(stack):
+        total = sum([x.value for x in stack])
+        if total > 31:
+            raise ValueError('A player pegged for more that 31, debug you player')
+        return total
+
+    def play_pegging_card(self, player, stack, hand, turn_card, board):
+        peg_card = player.next_pegging_card(stack, hand, turn_card)
+        if peg_card:
+            hand.remove(peg_card)
+            stack.append(peg_card)
+            stack_score = self.stack_count(stack)
+            msg = f'{player.name} pegged {peg_card}\n\n'
+            if stack_score in (15, 31):
+                msg += f'Stack Value: {stack_score}, 2 points for {player.name}\n'
+                board.add_points(player, 2)
+            else:
+                msg += f'Stack Value: {stack_score}\n'
+            msg += f'Stack:       {stack}\n'
+            self._game_message(msg)
+            return False
+        else:
+            msg = f'Player {player.name} said GO\n'
+            self._game_message(msg)
+            return True
+
     def pegging(self, dealer, non_dealer, dealer_hand, non_dealer_hand, turn_card, board):
         stack = []
 
-        def score_stack():
-            total = sum([x.value for x in stack])
-            if total > 31:
-                raise ValueError('A player pegged for more that 31, debug you player')
-            return total
-
         p1, p2 = non_dealer, dealer
         p1_hand, p2_hand = non_dealer_hand.copy(), dealer_hand.copy()
+        p2_go = True
 
-        while p1_hand or p2_hand:
-            p1_card = p1.next_pegging_card(stack, p1_hand, turn_card)
-            if p1_card:
-                p1_hand.remove(p1_card)
-                stack.append(p1_card)
-                stack_score = score_stack()
-                msg = f'{p1.name} pegged {p1_card}\n\n'
-                msg += f'Stack:       {stack}\n'
-                msg += f'Stack Value: {stack_score}'
+        def reset_stack():
+            self._trace(f'Clear stack {stack}, score={self.stack_count(stack)}')
+            stack.clear()
 
+        while True:
+            p1_go = self.play_pegging_card(p1, stack, p1_hand, turn_card, board)
+            if p1_go:
+                if p2_go:
+                    self._game_message(f'Last player was {p1.name}, 1 point (both could not go)')
+                    board.add_points(p1, 1)
+                    p1, p2 = p2, p1
+                    p1_hand, p2_hand = p2_hand, p1_hand
+                    reset_stack()
+                    continue
 
+            else:
+                if self.stack_count(stack) == 31:
+                    self._game_message(f'Last player was {p1.name}, 1 point (stack at 31)')
+                    board.add_points(p1, 1)
+                    p1, p2 = p2, p1
+                    p1_hand, p2_hand = p2_hand, p1_hand
+                    reset_stack()
+                    continue
+                elif not (p1_hand or p2_hand):
+                    self._game_message(f'Last player was {p1.name}, 1 point (no cards left)')
+                    board.add_points(p1, 1)
+                    break
 
+            p2_go = self.play_pegging_card(p2, stack, p2_hand, turn_card, board)
+            if p2_go:
+                if p1_go:
+                    self._game_message(f'Last player was {p2.name}, 1 point (both could not go)')
+                    board.add_points(p2, 1)
+                    reset_stack()
+                    continue
 
-                # TODO : score stack and show print it
-                self._game_message(msg)
+            else:
+                if self.stack_count(stack) == 31:
+                    self._game_message(f'Last player was {p2.name}, 1 point (stack at 31)')
+                    board.add_points(p2, 1)
+                    reset_stack()
+                    continue
+                elif not (p1_hand or p2_hand):
+                    self._game_message(f'Last player was {p2.name}, 1 point (no cards left)')
+                    board.add_points(p2, 1)
+                    break
 
-            p2_card = p2.next_pegging_card(stack, p2_hand, turn_card)
-            if p2_card:
-                p2_hand.remove(p2_card)
-                stack.append(p2_card)
-                stack_score = score_stack()
-                msg = f'{p2.name} pegged {p2_card}\n\n'
-                msg += f'Stack:       {stack}\n'
-                msg += f'Stack Value: {score_stack()}'
-
-                # TODO : score stack and show print it
-                self._game_message(msg)
-
-            if not p1_card and not p2_card:
-                self._trace(f'Clear stack {stack}, score={score_stack()}')
-                stack.clear()
-
-
-
+        self._game_message(f'End of pegging score: {board}')
 
     def score_hand(self, player, hand, turn_card, board, is_box):
         hand_or_box = 'Hand' if not is_box else 'Box'
@@ -217,5 +253,5 @@ class CribGame:
 
 if __name__ == '__main__':
     game = CribGame(crib_player.DumbComputerPlayer(), crib_player.DumbComputerPlayer(), 121,
-                    game_messages_enabled=True, trace_enabled=True)
+                    messages_enabled=True, trace_enabled=True)
     game.play()

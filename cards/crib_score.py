@@ -58,7 +58,9 @@ def breakdown_tostring(bd):
         if scores:
             if s:
                 s += '\n'
-            s += '%-9s: %s' % (score_type.capitalize(), ', '.join(map(str, map(lambda x: sorted(x) if isinstance(x, list) else x, (bd[score_type])))))
+            s += '%-9s: %s' % (score_type.capitalize(),
+                               ', '.join(map(str, map(lambda x: sorted(x)
+                               if isinstance(x, list) else x, (bd[score_type])))))
     return s
 
 

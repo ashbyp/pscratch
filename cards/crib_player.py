@@ -15,6 +15,7 @@ class Player:
 
 
 class DumbComputerPlayer(Player):
+    # don't change the stupidity of this player, unit tests need it
     ME_COUNT = 1
 
     def __init__(self, name=None):

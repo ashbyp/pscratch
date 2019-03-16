@@ -34,22 +34,32 @@ def pairs(hand, turn_card):
 
 def nob(hand, turn_card):
     if not turn_card:
-        return False
+        return []
 
     for c in hand:
         if c.rank == 11 and c.suit == turn_card.suit:
-            return True
-    return False
+            return [True]
+    return []
 
 
-def break_down(hand, turn_card):
+def break_down(hand, turn_card, is_box):
     return {
         'runs': runs(hand, turn_card),
-        'flushes': flushes(hand, turn_card),
+        'flushes': flushes(hand, turn_card if not is_box else None),
         'fifteens': fifteens(hand, turn_card),
         'pairs': pairs(hand, turn_card),
         'nob': nob(hand, turn_card)
     }
+
+
+def breakdown_tostring(bd):
+    s = ''
+    for score_type, scores in bd.items():
+        if scores:
+            if s:
+                s += '\n'
+            s += '%-9s: %s' % (score_type.capitalize(), ', '.join(map(str, map(lambda x: sorted(x) if isinstance(x, list) else x, (bd[score_type])))))
+    return s
 
 
 def score_breakdown(bd):
@@ -62,12 +72,12 @@ def score_breakdown(bd):
     return score
 
 
-def score_hand(hand, turn_card=None):
-    return score_breakdown(break_down(hand, turn_card))
+def score_hand(hand, turn_card, is_box=False):
+    return score_breakdown(break_down(hand, turn_card, is_box))
 
 
-def score_hand_with_breakdown(hand, turn_card=None):
-    bd = break_down(hand, turn_card)
+def score_hand_with_breakdown(hand, turn_card, is_box=False):
+    bd = break_down(hand, turn_card, is_box)
     return score_breakdown(bd), bd
 
 
@@ -76,7 +86,7 @@ def choose_best_hand(hand, hand_size):
 
     for comb in itertools.combinations(hand, hand_size):
         comb = list(comb)
-        score = score_hand(comb)
+        score = score_hand(comb, None)
         if not best:
             best = [(score, comb)]
         elif score > best[0][0]:
@@ -110,4 +120,5 @@ def run_some_hands(num):
 
 if __name__ == '__main__':
     run_some_hands(100)
+
 

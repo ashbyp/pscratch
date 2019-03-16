@@ -38,6 +38,10 @@ class TestCrib(TestCase):
         self.assertEqual(4, crib_score.score_hand(Card.from_str_list('ac, 2c, 9c, 7c'), Card.from_str('Jh')))
         self.assertEqual(0, crib_score.score_hand(Card.from_str_list('ad, 2c, 9c, 7c'), Card.from_str('Jc')))
 
+    def test_flush_box(self):
+        self.assertEqual(4, crib_score.score_hand(Card.from_str_list('ac,2c,9c,7c'), Card.from_str('Jc'), is_box=True))
+        self.assertEqual(4, crib_score.score_hand(Card.from_str_list('ac,2c,9c,7c'), None, is_box=True))
+
     def test_flush_no_turn(self):
         self.assertEqual(4, crib_score.score_hand(Card.from_str_list('ac, 2c, 9c, 7c'), None))
 
@@ -57,6 +61,13 @@ class TestCrib(TestCase):
         self.assertEqual(1, len(bd['flushes']))
         self.assertEqual(1, len(bd['fifteens']))
         self.assertEqual(16, score)
+
+        str_rep = '''Runs     : [2 of Diamonds, 3 of Diamonds, 4 of Diamonds, 5 of Diamonds], [2 of Diamonds, 3 of Diamonds, 4 of Diamonds, 5 of Spades]
+Flushes  : [2 of Diamonds, 3 of Diamonds, 4 of Diamonds, 5 of Diamonds]
+Fifteens : [2 of Diamonds, 3 of Diamonds, 5 of Diamonds, 5 of Spades]
+Pairs    : [5 of Diamonds, 5 of Spades]'''
+
+        self.assertEqual(str_rep, crib_score.breakdown_tostring(bd))
 
         score, bd = crib_score.score_hand_with_breakdown(Card.from_str_list('jc, qc, kc, jd'), Card.from_str('js'))
         self.assertEqual(3, len(bd['pairs']))

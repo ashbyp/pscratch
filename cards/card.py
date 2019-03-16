@@ -107,8 +107,8 @@ class Card:
 
 
 class Deck:
-    def __init__(self):
-        self._cards = standard_deck()
+    def __init__(self, cards=None):
+        self._cards = standard_deck() if not cards else cards
 
     def shuffle(self):
         random.shuffle(self._cards)
@@ -128,6 +128,11 @@ class Deck:
 
     def next_card(self):
         return self._cards.pop(0)
+
+    def random_card(self):
+        card = random.choice(self._cards)
+        self._cards.remove(card)
+        return card
 
     def return_card(self, returned):
         self._cards.append(returned)

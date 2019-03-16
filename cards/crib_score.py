@@ -82,9 +82,25 @@ def score_hand_with_breakdown(hand, turn_card, is_box=False):
     bd = break_down(hand, turn_card, is_box)
     return score_breakdown(bd), bd
 
-def score_pegging_stack(stack):
-    return 0, ''
 
+def score_pegging_stack(stack):
+    stack_len = len(stack)
+    if stack_len >= 2:
+        stack = list(reversed(stack))
+        of_a_kind = 1
+        for i in range(1, stack_len):
+            if stack[i].rank == stack[0].rank:
+                of_a_kind += 1
+            else:
+                break
+        if of_a_kind > 1:
+            return {2: 2, 3: 6, 4: 12}[of_a_kind], f'{of_a_kind} of a kind'
+
+        for run_length in range(stack_len, 2, -1):
+            if card.is_run(stack[0:run_length]):
+                return run_length, f'run of {run_length}'
+
+    return 0, None
 
 
 def choose_best_hand(hand, hand_size):

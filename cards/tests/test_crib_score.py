@@ -89,3 +89,66 @@ Pairs    : [5 of Diamonds, 5 of Spades]'''
         self.assertEqual(8, best[0][0])
         self.assertTrue(set(Card.from_str_list('2d, 3d, 4d, 5d')) in [set(x[1]) for x in best])
 
+    def test_score_pegging_stack_no_score(self):
+        stack = []
+        score, desc = crib_score.score_pegging_stack(stack)
+        self.assertEqual(0, score)
+
+        stack = Card.from_str_list('AC')
+        score, desc = crib_score.score_pegging_stack(stack)
+        self.assertEqual(0, score)
+
+        stack = Card.from_str_list('AC, 2S, 5D')
+        score, desc = crib_score.score_pegging_stack(stack)
+        self.assertEqual(0, score)
+
+        stack = Card.from_str_list('AC, 2S, AD')
+        score, desc = crib_score.score_pegging_stack(stack)
+        self.assertEqual(0, score)
+
+    def test_score_pegging_stack_2_of_a_kind(self):
+        stack = Card.from_str_list('AC, 2S, 2D')
+        score, desc = crib_score.score_pegging_stack(stack)
+        self.assertEqual(2, score)
+
+    def test_score_pegging_stack_3_of_a_kind(self):
+        stack = Card.from_str_list('AC, 2S, 2D, 2S')
+        score, desc = crib_score.score_pegging_stack(stack)
+        self.assertEqual(6, score)
+
+    def test_score_pegging_stack_4_of_a_kind(self):
+        stack = Card.from_str_list('AC, 2S, 2D, 2S, 2H')
+        score, desc = crib_score.score_pegging_stack(stack)
+        self.assertEqual(12, score)
+
+    def test_score_pegging_stack_run_of_3(self):
+        stack = Card.from_str_list('AC, JS, 2D, 3S, 4H')
+        score, desc = crib_score.score_pegging_stack(stack)
+        self.assertEqual(3, score)
+
+    def test_score_pegging_stack_run_of_4(self):
+        stack = Card.from_str_list('2D, 3S, 4H, 5H')
+        score, desc = crib_score.score_pegging_stack(stack)
+        self.assertEqual(4, score)
+
+    def test_score_pegging_stack_run_of_5(self):
+        stack = Card.from_str_list('AD, 2D, 3S, 4H, 5H')
+        score, desc = crib_score.score_pegging_stack(stack)
+        self.assertEqual(5, score)
+
+    def test_score_pegging_stack_run_of_6(self):
+        stack = Card.from_str_list('AD, 2D, 3S, 4H, 5H, 6H')
+        score, desc = crib_score.score_pegging_stack(stack)
+        self.assertEqual(6, score)
+
+    def test_score_pegging_stack_run_of_7(self):
+        stack = Card.from_str_list('AD, 2D, 3S, 4H, 5H, 6H, 7C')
+        score, desc = crib_score.score_pegging_stack(stack)
+        self.assertEqual(7, score)
+
+
+
+
+
+
+

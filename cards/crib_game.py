@@ -35,7 +35,7 @@ class CribBoard:
 
 class CribGame:
 
-    def __init__(self, player1, player2, target_score, messages_enabled=True, trace_enabled=False):
+    def __init__(self, player1, player2, target_score=121, messages_enabled=True, trace_enabled=False):
         self._trace_enabled = trace_enabled
         self._game_messages_enabled = messages_enabled
         self._player1 = player1
@@ -80,9 +80,9 @@ class CribGame:
 
                 self._trace(f'{self._player1.name} cut {player1_card}, {self._player2.name} cut {player2_card}')
 
-                if player1_card.rank > player2_card.rank:
+                if player1_card.rank < player2_card.rank:
                     return self._player1, self._player2, player1_card, player2_card
-                elif player2_card.rank > player1_card.rank:
+                elif player2_card.rank < player1_card.rank:
                     return self._player2, self._player1, player2_card, player1_card
             finally:
                 deck.return_cards([player1_card, player2_card])
@@ -234,7 +234,7 @@ class CribGame:
 
         while True:
             try:
-                dealer_hand, non_dealer_hand = deck.deal(2, 6)
+                dealer_hand, non_dealer_hand = map(sorted, deck.deal(2, 6))
 
                 self._trace(f'{dealer.name} has been dealt {dealer_hand}')
                 self._trace(f'{non_dealer.name} has been dealt {non_dealer_hand}')

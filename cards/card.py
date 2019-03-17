@@ -41,6 +41,8 @@ class Card:
         # 10S 10s - both 10 spades
         # 5C 5c - both 5 clubs
         # JH Jh 11H 11h - all jack of hearts
+        if len(card_name) > 3:
+            raise ValueError('invalid format, try one of these formats \'JH Jh 11H 11h\'')
         card_name = card_name.upper()
         rank_str = card_name[0:2] if len(card_name) == 3 else card_name[0]
         if rank_str in SHORT_PICTURES:

@@ -44,7 +44,7 @@ class TestCribGame(TestCase):
         deck.shuffle()
         for _ in range(100):
             dealer, non_dealer, dealer_card, non_dealer_card = self._game.decide_dealer(deck)
-            self.assertTrue(dealer_card > non_dealer_card)
+            self.assertTrue(dealer_card < non_dealer_card)
             self.assertEqual(52, deck.cards_remaining())
 
     def test_CribGame_discard(self):

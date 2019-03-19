@@ -99,10 +99,12 @@ class Card:
         return self._cmp(other) > 0
 
     def __repr__(self):
-        return '{0} of {1}s'.format(self.str_rank(), self._suit)
+        #return '{0} of {1}s'.format(self.str_rank(), self._suit)
+        return '{0}{1}'.format(self.str_rank(), self._suit[0])
 
     def __str__(self):
-        return '{0} of {1}s'.format(self.str_rank(), self._suit)
+        #return '{0} of {1}s'.format(self.str_rank(), self._suit)
+        return '{0}{1}'.format(self.str_rank(), self._suit[0])
 
     def __hash__(self):
         return hash(self.__repr__())

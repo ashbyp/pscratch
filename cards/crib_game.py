@@ -174,8 +174,7 @@ class CribGame:
 
             else:
                 if self.stack_count(stack) == 31:
-                    self._game_message(f'Last player was {p1.name}, 1 point (stack at 31)')
-                    board.add_points(p1, 1)
+                    self._game_message(f'Last player was {p1.name}, (stack at 31)')
                     if not (p1_hand or p2_hand):
                         break
                     p1, p2 = p2, p1
@@ -197,8 +196,7 @@ class CribGame:
 
             else:
                 if self.stack_count(stack) == 31:
-                    self._game_message(f'Last player was {p2.name}, 1 point (stack at 31)')
-                    board.add_points(p2, 1)
+                    self._game_message(f'Last player was {p2.name}, (stack at 31)')
                     if not (p1_hand or p2_hand):
                         break
                     reset_stack()

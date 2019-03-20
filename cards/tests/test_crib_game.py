@@ -137,7 +137,7 @@ class TestCribGame(TestCase):
         #  5D 5C 7S = last card for dealer, 1 point
 
         self.assertEqual(1, self._board.player_score(self._player1))
-        self.assertEqual(3, self._board.player_score(self._player2))
+        self.assertEqual(2, self._board.player_score(self._player2))
 
     def test_CribGame_pegging_score_15(self):
         dealer = card.Card.from_str_list('5D, 3D, 8D, 7S')

@@ -62,10 +62,10 @@ class TestCrib(TestCase):
         self.assertEqual(1, len(bd['fifteens']))
         self.assertEqual(16, score)
 
-        str_rep = '''Runs     : [2 of Diamonds, 3 of Diamonds, 4 of Diamonds, 5 of Diamonds], [2 of Diamonds, 3 of Diamonds, 4 of Diamonds, 5 of Spades]
-Flushes  : [2 of Diamonds, 3 of Diamonds, 4 of Diamonds, 5 of Diamonds]
-Fifteens : [2 of Diamonds, 3 of Diamonds, 5 of Diamonds, 5 of Spades]
-Pairs    : [5 of Diamonds, 5 of Spades]'''
+        str_rep = '''Runs     : [2D, 3D, 4D, 5D], [2D, 3D, 4D, 5S]
+Flushes  : [2D, 3D, 4D, 5D]
+Fifteens : [2D, 3D, 5D, 5S]
+Pairs    : [5D, 5S]'''
 
         self.assertEqual(str_rep, crib_score.breakdown_tostring(bd))
 

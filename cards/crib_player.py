@@ -48,15 +48,17 @@ class HumanPlayer(DumbComputerPlayer):  # for now
         print(f'\nYour dealt cards are: {hand}')
         while True:
             try:
-                user_input = input('\nWhat will you discard? ')
+                user_input = None
+                while not user_input:
+                    user_input = input('\nWhat will you discard? ')
                 cards = Card.from_str_list(user_input)
                 if set(cards).issubset(set(hand)):
-                    if len(cards) == 2:
+                    if len(set(cards)) == 2:
                         return cards
                     else:
                         print('Select two cards please, try again')
                 else:
-                    print('Selection is not a subset of your cards, try again')
+                    print('Please select valid cards from your hand, try again')
             except ValueError as e:
                 print(f'Input error "{e}"')
 

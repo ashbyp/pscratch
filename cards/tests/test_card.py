@@ -5,16 +5,16 @@ from cards.card import Card
 class TestCard(TestCase):
 
     def setUp(self):
-        self.ace_of_diamonds = Card(1, 'Diamond')
-        self.ten_of_spades = Card(10, 'Spade')
-        self.five_of_clubs = Card(5, 'Club')
-        self.jack_of_hearts = Card(11, 'Heart')
+        self.ace_of_diamonds = Card(1, 'D')
+        self.ten_of_spades = Card(10, 'S')
+        self.five_of_clubs = Card(5, 'C')
+        self.jack_of_hearts = Card(11, 'H')
 
     def test_card_constructor_throws_appropriate_exceptions(self):
         with self.assertRaises(ValueError):
-            Card('15', 'Spade')
+            Card('15', 'S')
         with self.assertRaises(ValueError):
-            Card('xx', 'Spade')
+            Card('xx', 'S')
         with self.assertRaises(ValueError):
             Card('10', 'NotExist')
 

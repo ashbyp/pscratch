@@ -60,9 +60,9 @@ class TestCribGame(TestCase):
         deck = card.Deck()
         turn_card = self._game.turn(deck, self._player1, self._board)
         self.assertTrue(turn_card is not None)
-        deck = card.Deck([card.Card('11', 'Heart')])
+        deck = card.Deck([card.Card('11', 'H')])
         turn_card = self._game.turn(deck, self._player1, self._board)
-        self.assertEqual(card.Card('11', 'Heart'), turn_card)
+        self.assertEqual(card.Card('11', 'H'), turn_card)
         self.assertEqual(2, self._board.player_score(self._player1))
 
     def test_CribGame_play_pegging_card_empty_stack(self):

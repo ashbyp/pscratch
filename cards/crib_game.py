@@ -87,15 +87,17 @@ class CribGame:
             finally:
                 deck.return_cards([player1_card, player2_card])
 
-    def discard(self, dealer, non_dealer, dealer_cards, non_dealer_cards):
-        dealer_discards = dealer.choose_discards(dealer_cards)
+    def discard(self, dealer, non_dealer, start_dealer_cards, start_non_dealer_cards):
+        dealer_discards = dealer.choose_discards(start_dealer_cards)
         self._trace(f'{dealer.name} has discarded {dealer_discards}')
+        assert len(dealer_discards) == 2, f'discards should be length of 2 {dealer_discards}'
 
-        non_dealer_discards = non_dealer.choose_discards(non_dealer_cards)
+        non_dealer_discards = non_dealer.choose_discards(start_non_dealer_cards)
         self._trace(f'{non_dealer.name} has discarded {non_dealer_discards}')
+        assert len(non_dealer_discards) == 2, f'discards should be length of 2 {non_dealer_discards}'
 
-        dealer_cards = [x for x in dealer_cards if x not in dealer_discards]
-        non_dealer_cards = [x for x in non_dealer_cards if x not in non_dealer_discards]
+        dealer_cards = [x for x in start_dealer_cards if x not in dealer_discards]
+        non_dealer_cards = [x for x in start_non_dealer_cards if x not in non_dealer_discards]
         box = dealer_discards + non_dealer_discards
 
         return dealer_cards, non_dealer_cards, box

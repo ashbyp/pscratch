@@ -1,23 +1,15 @@
 import random
 import itertools
 
-SUITS = {
-    'Club': 0,
-    'Diamond': 1,
-    'Heart': 2,
-    'Spade': 3,
-}
-SUIT_NAMES = tuple(SUITS.keys())
-SHORT_SUITS_MAP = {k[0]: k for k in SUITS.keys()}
+SUITS = ('C', 'D', 'H', 'S')
 
 PICTURES = {
-    'Jack': 11,
-    'Queen': 12,
-    'King': 13,
-    'Ace': 1
+    'J': 11,
+    'Q': 12,
+    'K': 13,
+    'A': 1,
 }
 
-SHORT_PICTURES = {k[0]: v for k, v in PICTURES.items()}
 RANK_TO_PICTURES = {v: k for k, v in PICTURES.items()}
 
 
@@ -30,8 +22,8 @@ class Card:
         except ValueError as e:
             raise ValueError("rank must be an integer", e)
 
-        if suit not in SUIT_NAMES:
-            raise ValueError(f'suit must be one of {SUIT_NAMES}')
+        if suit not in SUITS:
+            raise ValueError(f'suit must be one of {SUITS}')
         self._suit = suit
         self._value = self._rank if self._rank < 11 else 10
 
@@ -45,15 +37,15 @@ class Card:
             raise ValueError('invalid format, try one of these formats \'JH Jh 11H 11h\'')
         card_name = card_name.upper()
         rank_str = card_name[0:2] if len(card_name) == 3 else card_name[0]
-        if rank_str in SHORT_PICTURES:
-            rank = int(SHORT_PICTURES[rank_str])
+        if rank_str in PICTURES:
+            rank = int(PICTURES[rank_str])
         else:
             rank = int(rank_str)
 
-        short_suit_name = card_name[-1]
-        if short_suit_name not in SHORT_SUITS_MAP:
-            raise ValueError(f'short suit name must be one of {SHORT_SUITS_MAP.keys()}')
-        return Card(rank, SHORT_SUITS_MAP[card_name[-1]])
+        suit_name = card_name[-1]
+        if suit_name not in SUITS:
+            raise ValueError(f'short suit name must be one of {SUITS}')
+        return Card(rank, suit_name)
 
     @staticmethod
     def from_str_list(card_names):
@@ -75,10 +67,7 @@ class Card:
         return RANK_TO_PICTURES.get(self._rank, str(self._rank))
 
     def _cmp(self, other):
-        if self.rank != other.rank:
-            return self.rank - other.rank
-        else:
-            return SUITS[self.suit] - SUITS[other.suit]
+        return (self.rank - other.rank) or (ord(self.suit) - ord(other.suit))
 
     def __lt__(self, other):
         return self._cmp(other) < 0
@@ -99,11 +88,9 @@ class Card:
         return self._cmp(other) > 0
 
     def __repr__(self):
-        #return '{0} of {1}s'.format(self.str_rank(), self._suit)
         return '{0}{1}'.format(self.str_rank(), self._suit[0])
 
     def __str__(self):
-        #return '{0} of {1}s'.format(self.str_rank(), self._suit)
         return '{0}{1}'.format(self.str_rank(), self._suit[0])
 
     def __hash__(self):
@@ -146,12 +133,12 @@ class Deck:
 
 
 def standard_deck():
-    return [Card(r, s) for r in range(1, 14) for s in SUIT_NAMES]
+    return [Card(r, s) for r in range(1, 14) for s in SUITS]
 
 
 def split_suits(cards):
     split = {}
-    for suit in SUIT_NAMES:
+    for suit in SUITS:
         split[suit] = sorted([c for c in cards if c.suit == suit])
     return split
 

@@ -1,6 +1,5 @@
-from cards import card
-from cards import crib_score
-from cards import crib_player
+from cards.base import card
+from cards.cribbage import player, score
 from collections import OrderedDict
 
 
@@ -19,14 +18,19 @@ class CribBoard:
         })
         self._target_points = target_points
 
-    def add_points(self, player, points):
-        self._board[player]['back'] = self._board[player]['front']
-        self._board[player]['front'] = self._board[player]['front'] + points
-        if self._board[player]['front'] >= self._target_points:
-            raise GameWonException(player, self._board[player]['front'])
+    def add_points(self, pl, points):
+        self._board[pl]['back'] = self._board[pl]['front']
+        self._board[pl]['front'] = self._board[pl]['front'] + points
+        if self._board[pl]['front'] >= self._target_points:
+            raise GameWonException(pl, self._board[pl]['front'])
 
-    def player_score(self, player):
-        return self._board[player]['front']
+    def player_score(self, pl):
+        return self._board[pl]['front']
+
+    def reset(self):
+        for _, pl in self._board.items():
+            pl['front'] = 0
+            pl['back'] = 0
 
     def __str__(self):
         keys = list(self._board.keys())
@@ -123,7 +127,7 @@ class CribGame:
 
     @staticmethod
     def score_pegging_stack(stack):
-        return crib_score.score_pegging_stack(stack)
+        return score.score_pegging_stack(stack)
 
     def play_pegging_card(self, player, stack, hand, turn_card, board):
         peg_card = player.next_pegging_card(stack, hand, turn_card)
@@ -210,23 +214,23 @@ class CribGame:
 
         self._game_message(f'End of pegging score: {board}')
 
-    def score_hand(self, player, hand, turn_card, board, is_box):
+    def score_hand(self, pl, hand, turn_card, board, is_box):
         hand_or_box = 'Hand' if not is_box else 'Box'
-        score_msg = f'{hand_or_box} score for {player.name}\n'
+        score_msg = f'{hand_or_box} score for {pl.name}\n'
         score_msg += f' Cards : {hand}\n'
         score_msg += f' Turn  : {turn_card}\n\n\n'
 
-        score, breakdown = crib_score.score_hand_with_breakdown(hand, turn_card, is_box)
+        sc, breakdown = score.score_hand_with_breakdown(hand, turn_card, is_box)
 
-        score_msg += f'{crib_score.breakdown_tostring(breakdown)}\n'
-        score_msg += f'Score    : {score}\n'
+        score_msg += f'{score.breakdown_tostring(breakdown)}\n'
+        score_msg += f'Score    : {sc}\n'
 
         self._game_message(score_msg)
-        board.add_points(player, score)
+        board.add_points(pl, sc)
 
-    def play(self):
-        board = CribBoard(self._player1, self._player2, 121)
-        deck = card.Deck()
+    def play(self, deck=None, board=None):
+        board = board or CribBoard(self._player1, self._player2, 121)
+        deck = deck or card.Deck()
         deck.shuffle()
         dealer, non_dealer, dealer_card, non_dealer_card = self.decide_dealer(deck)
 
@@ -267,6 +271,6 @@ class CribGame:
 
 
 if __name__ == '__main__':
-    game = CribGame(crib_player.DumbComputerPlayer(), crib_player.DumbComputerPlayer(), 121,
+    game = CribGame(player.DumbComputerPlayer(), player.DumbComputerPlayer(), 121,
                     messages_enabled=True, trace_enabled=True)
     game.play()

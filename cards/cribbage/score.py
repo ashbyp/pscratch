@@ -1,4 +1,4 @@
-from cards import card
+from cards.base import card
 import itertools
 
 

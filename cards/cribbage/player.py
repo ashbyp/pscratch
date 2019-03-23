@@ -1,4 +1,4 @@
-from cards.card import Card
+from cards.base.card import Card
 
 
 class Player:
@@ -13,7 +13,7 @@ class Player:
     def choose_discards(self, hand):
         raise NotImplementedError()
 
-    def next_pegging_card(stack, hand, turn_card):#
+    def next_pegging_card(self, stack, hand, turn_card):
         raise NotImplementedError()
 
 

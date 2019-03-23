@@ -1,5 +1,6 @@
+import random
 from unittest import TestCase
-from cards.card import Card
+from cards.base.card import Card, standard_deck
 
 
 class TestCard(TestCase):
@@ -50,6 +51,13 @@ class TestCard(TestCase):
         c1 = Card.from_str('JH')
         c2 = Card.from_str('JH')
         self.assertEqual(c1, c2)
-        self.assertEqual(set([c1]), set([c2]))
+        self.assertEqual({c1}, {c2})
+
+    def test_sort(self):
+        cards = standard_deck()
+        random.shuffle(cards)
+        cards = sorted(cards)
+        self.assertEqual(Card.from_str_list('AC,AD,AH,AS,2C,2D,2H,2S'), cards[0:8])
+
 
 

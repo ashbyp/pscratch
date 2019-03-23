@@ -39,8 +39,9 @@ class TestScore(TestCase):
         self.assertEqual(0, score.score_hand(Card.from_str_list('ad, 2c, 9c, 7c'), Card.from_str('Jc')))
 
     def test_flush_box(self):
-        self.assertEqual(4, score.score_hand(Card.from_str_list('ac,2c,9c,7c'), Card.from_str('Jc'), is_box=True))
-        self.assertEqual(4, score.score_hand(Card.from_str_list('ac,2c,9c,7c'), None, is_box=True))
+        self.assertEqual(5, score.score_hand(Card.from_str_list('ac,2c,9c,7c'), Card.from_str('Jc'), is_box=True))
+        self.assertEqual(0, score.score_hand(Card.from_str_list('ac,2c,9c,7s'), Card.from_str('Jc'), is_box=True))
+        self.assertEqual(0, score.score_hand(Card.from_str_list('ac,2c,9c,7c'), None, is_box=True))
 
     def test_flush_no_turn(self):
         self.assertEqual(4, score.score_hand(Card.from_str_list('ac, 2c, 9c, 7c'), None))

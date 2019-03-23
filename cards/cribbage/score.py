@@ -6,12 +6,17 @@ def runs(hand, turn_card):
     return card.any_suit_runs(hand + [turn_card] if turn_card else hand, 3)
 
 
-def flushes(hand, turn_card):
-    if not turn_card:
-        return card.flushes(hand, 4)
-
-    if card.flushes(hand, 4):
-        return card.flushes(hand + [turn_card], 4)
+def flushes(hand, turn_card, is_box):
+    if is_box:
+        if turn_card:
+            if card.flushes(hand, 4):
+                return card.flushes(hand + [turn_card], 5)
+    else:
+        if turn_card:
+            if card.flushes(hand, 4):
+                return card.flushes(hand + [turn_card], 4)
+        else:
+            return card.flushes(hand, 4)
     return []
 
 
@@ -45,7 +50,7 @@ def nob(hand, turn_card):
 def break_down(hand, turn_card, is_box):
     return {
         'runs': runs(hand, turn_card),
-        'flushes': flushes(hand, turn_card if not is_box else None),
+        'flushes': flushes(hand, turn_card, is_box),
         'fifteens': fifteens(hand, turn_card),
         'pairs': pairs(hand, turn_card),
         'nob': nob(hand, turn_card)

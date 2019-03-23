@@ -1,4 +1,6 @@
+import random
 from cards.base.card import Card
+from cards.cribbage import score
 
 
 class Player:
@@ -23,7 +25,7 @@ class DumbComputerPlayer(Player):
 
     def __init__(self, name=None):
         if not name:
-            Player.__init__(self, f'Dumb{DumbComputerPlayer.ME_COUNT}')
+            Player.__init__(self, f'Dumb_{DumbComputerPlayer.ME_COUNT}')
             DumbComputerPlayer.ME_COUNT += 1
         else:
             Player.__init__(self, name)
@@ -36,6 +38,63 @@ class DumbComputerPlayer(Player):
         for card in hand:
             if stack_score + card.value <= 31:
                 return card
+        return None
+
+
+class RandomComputerPlayer(Player):
+    ME_COUNT = 1
+
+    def __init__(self, name=None):
+        if not name:
+            Player.__init__(self, f'Random_{DumbComputerPlayer.ME_COUNT}')
+            RandomComputerPlayer.ME_COUNT += 1
+        else:
+            Player.__init__(self, name)
+
+    def choose_discards(self, hand):
+        return random.sample(hand, 2)
+
+    def next_pegging_card(self, stack, hand, turn_card):  #
+        stack_score = sum([x.value for x in stack])
+        random.shuffle(hand)
+        for card in hand:
+            if stack_score + card.value <= 31:
+                return card
+        return None
+
+
+class ComputerPlayerV1(Player):
+    ME_COUNT = 1
+
+    def __init__(self, name=None):
+        if not name:
+            Player.__init__(self, f'CompV1_{ComputerPlayerV1.ME_COUNT}')
+            ComputerPlayerV1.ME_COUNT += 1
+        else:
+            Player.__init__(self, name)
+
+    def choose_discards(self, hand):
+        best = score.choose_best_hand(hand, 4)[0][1]
+        return [x for x in hand if x not in best]
+
+    def next_pegging_card(self, stack, hand, turn_card):
+        stack_score = sum([x.value for x in stack])
+        score_per_card = []
+        for card in hand:
+            if stack_score + card.value <= 31:
+                score_per_card.append(score.score_pegging_stack(stack + [card])[0])
+            else:
+                score_per_card.append(None)
+
+        if all(x is None for x in score_per_card):
+            return None
+
+        best_score = max(x for x in score_per_card if x is not None)
+
+        for i, s in enumerate(score_per_card):
+            if s == best_score:
+                return hand[i]
+
         return None
 
 

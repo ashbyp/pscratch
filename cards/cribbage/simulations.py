@@ -1,4 +1,5 @@
 import timeit
+import datetime
 import numpy as np
 import concurrent.futures
 import multiprocessing
@@ -8,12 +9,17 @@ from cards.cribbage import score
 from cards.cribbage.stats import Collector
 from cards.cribbage.game import Game
 from cards.cribbage.display import Display
-from cards.cribbage.player import DumbComputerPlayer
+from cards.cribbage.player import  RandomComputerPlayer, ComputerPlayerV1
 
 
 class Simulator:
     def run(self, *args, **kwargs):
         raise NotImplementedError()
+
+    @staticmethod
+    def record_results(simulation_type, num_simulations, stats):
+        with open(f'{simulation_type}.txt', 'a') as f:
+            f.write(f'{datetime.datetime.now()} :: Simulations: {num_simulations} :: {stats}\n')
 
 
 class TargetScoreSimulation(Simulator):
@@ -87,27 +93,25 @@ class TargetScoreSimulation(Simulator):
 
 class PlayerPerformanceSimulator(Simulator):
 
-    def __init__(self, player1, player2):
-        self._player1 = player1
-        self._player2 = player2
+    def __init__(self, player):
+        self._player1 = player
+        self._player2 = RandomComputerPlayer()
 
     def run(self, num_games):
         display = Display(False)
         collector = Collector(self._player1, self._player2)
         game = Game(self._player1, self._player2, stats=collector, display=display)
 
-        with multiprocessing.Pool() as pool:
-            for _ in range(num_games):
-                pool.apply(game.play)
+        for _ in range(num_games):
+            game.play()
 
-        print(collector)
+        print(f'Simulations: {num_games} :: {collector}')
+        self.record_results(self.__class__.__name__, num_games, collector)
 
 
 if __name__ == '__main__':
-    # sim = TargetScoreSimulation()
-    # sim.run(20, 20)
-    sim = PlayerPerformanceSimulator(DumbComputerPlayer(), DumbComputerPlayer())
-    sim.run(10000)
+    sim = PlayerPerformanceSimulator(ComputerPlayerV1())
+    sim.run(1000)
 
 
 

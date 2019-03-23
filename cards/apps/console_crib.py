@@ -1,9 +1,6 @@
-from cards.cribbage.player import HumanPlayer, DumbComputerPlayer
+from cards.cribbage import player
 from cards.cribbage.game import Game
 
-game = Game(HumanPlayer(), DumbComputerPlayer())
+game = Game(player.HumanPlayer(), player.ComputerPlayerV1())
 game.play()
 
-# for _ in range(100):
-#     game = CribGame(DumbComputerPlayer(), DumbComputerPlayer())
-#     game.play()

@@ -65,7 +65,7 @@ class Game:
     def stack_count(stack):
         total = sum([x.value for x in stack])
         if total > 31:
-            raise ValueError('A player pegged for more that 31, debug you player')
+            raise ValueError('A player pegged for more that 31, debug your player')
         return total
 
     @staticmethod

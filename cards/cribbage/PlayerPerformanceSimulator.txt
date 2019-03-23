@@ -1,0 +1,4 @@
+2019-03-23 18:23:37.788757 :: Simulations: 1000 :: ['CompV1_1: avg peg 2.91 avg hand 7.83 avg box 4.69 overall 15.43', 'Random_1: avg peg 2.36 avg hand 4.47 avg box 4.72 overall 11.54']
+2019-03-23 18:23:59.084577 :: Simulations: 1000 :: ['CompV1_1: avg peg 2.94 avg hand 7.93 avg box 4.64 overall 15.52', 'Random_1: avg peg 2.40 avg hand 4.46 avg box 4.87 overall 11.73']
+2019-03-23 18:25:34.473836 :: Simulations: 1000 :: ['CompV1_1: avg peg 2.90 avg hand 7.95 avg box 4.65 overall 15.50', 'Random_1: avg peg 2.35 avg hand 4.49 avg box 4.77 overall 11.61']
+2019-03-23 18:31:04.545031 :: Simulations: 1000 :: ['CompV1_1: avg peg 2.89 avg hand 7.72 avg box 4.71 overall 15.32', 'Random_1: avg peg 2.33 avg hand 4.48 avg box 4.81 overall 11.61']

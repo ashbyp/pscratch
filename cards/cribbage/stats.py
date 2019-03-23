@@ -29,8 +29,9 @@ class Collector:
         return avg_peg, avg_hand, avg_box
 
     def averages_tostring(self, player):
-        avg_peg, avg_hand, avg_box = self.averages(player)
-        return f'{player.name}: avg peg {avg_peg} avg hand {avg_hand} avg box {avg_box}'
+        averages = self.averages(player)
+        overall = sum(averages)
+        return f'{player.name}: avg peg %.2f avg hand %.2f avg box %.2f overall %.2f' % (*averages, overall)
 
     def __str__(self):
         return str([self.averages_tostring(k) for k in self._stats])

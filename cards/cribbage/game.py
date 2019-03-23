@@ -1,40 +1,7 @@
-from cards.base import card
-from cards.cribbage import player, score
-from collections import OrderedDict
-
-
-class GameWonException(Exception):
-    def __init__(self, winning_player, winning_player_score):
-        super().__init__(f'{winning_player.name} won with {winning_player_score}')
-        self._winning_player = winning_player
-
-
-class CribBoard:
-
-    def __init__(self, player1, player2, target_points):
-        self._board = OrderedDict({
-            player1: {'front': 0, 'back': 0},
-            player2: {'front': 0, 'back': 0},
-        })
-        self._target_points = target_points
-
-    def add_points(self, pl, points):
-        self._board[pl]['back'] = self._board[pl]['front']
-        self._board[pl]['front'] = self._board[pl]['front'] + points
-        if self._board[pl]['front'] >= self._target_points:
-            raise GameWonException(pl, self._board[pl]['front'])
-
-    def player_score(self, pl):
-        return self._board[pl]['front']
-
-    def reset(self):
-        for _, pl in self._board.items():
-            pl['front'] = 0
-            pl['back'] = 0
-
-    def __str__(self):
-        keys = list(self._board.keys())
-        return f'{keys[0].name}: {self.player_score(keys[0])}, {keys[1].name}: {self.player_score(keys[1])}'
+from cards.base.card import Deck
+from cards.cribbage.player import DumbComputerPlayer
+from cards.cribbage.board import CribBoard, GameWonException
+from cards.cribbage import score
 
 
 class CribGame:
@@ -228,9 +195,9 @@ class CribGame:
         self._game_message(score_msg)
         board.add_points(pl, sc)
 
-    def play(self, deck=None, board=None):
+    def play(self,  board=None):
         board = board or CribBoard(self._player1, self._player2, 121)
-        deck = deck or card.Deck()
+        deck = Deck()
         deck.shuffle()
         dealer, non_dealer, dealer_card, non_dealer_card = self.decide_dealer(deck)
 
@@ -271,6 +238,5 @@ class CribGame:
 
 
 if __name__ == '__main__':
-    game = CribGame(player.DumbComputerPlayer(), player.DumbComputerPlayer(), 121,
-                    messages_enabled=True, trace_enabled=True)
+    game = CribGame(DumbComputerPlayer(), DumbComputerPlayer(), 121, messages_enabled=True, trace_enabled=True)
     game.play()

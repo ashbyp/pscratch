@@ -1,43 +1,21 @@
 from cards.base.card import Deck
 from cards.cribbage.player import DumbComputerPlayer
-from cards.cribbage.board import CribBoard, GameWonException
+from cards.cribbage.board import Board, GameWonException
 from cards.cribbage import score
+from cards.cribbage.display import Display
+from cards.cribbage.stats import Collector
 
 
-class CribGame:
+class Game:
 
-    def __init__(self, player1, player2, target_score=121, messages_enabled=True, trace_enabled=False):
+    def __init__(self, player1, player2, target_score=121, stats=None, display=None, trace_enabled=False):
         self._trace_enabled = trace_enabled
-        self._game_messages_enabled = messages_enabled
         self._player1 = player1
         self._player2 = player2
         self._target_score = target_score
-        self._welcome()
-
-    def _welcome(self):
-        if self._game_messages_enabled:
-            print()
-            print('*' * 70)
-            print(f'  Welcome to Cribbage v0.1')
-            print(f'      {self._player1.name}')
-            print(f'      {self._player2.name}')
-            print('*' * 70)
-            print()
-
-    def _announce_win(self, board):
-        if self._game_messages_enabled:
-            print()
-            print('*' * 70)
-            print(f'  Winner')
-            print(f'      {board}')
-            print('*' * 70)
-            print()
-
-    def _game_message(self, message):
-        if self._game_messages_enabled:
-            print('-' * 60)
-            print(f' {message}')
-            print('-' * 60)
+        self._display = display or Display(True)
+        self._stats = stats or Collector(self._player1, self._player2)
+        self._display.welcome(self._player1, self._player2)
 
     def _trace(self, msg):
         if self._trace_enabled:
@@ -79,10 +57,8 @@ class CribGame:
 
         if turn_card.rank == 11:
             board.add_points(dealer, 2)
-            self._game_message(f'Turn card was {turn_card} nibs to {dealer.name} ({board})')
-        else:
-            self._game_message(f'Turn card was {turn_card}')
 
+        self._display.turn_card(turn_card, dealer, board, turn_card.rank == 11)
         return turn_card
 
     @staticmethod
@@ -101,31 +77,25 @@ class CribGame:
         if peg_card:
             hand.remove(peg_card)
             stack.append(peg_card)
-            count = self.stack_count(stack)
-            stack_score, score_desc = self.score_pegging_stack(stack)
+            stack_value = self.stack_count(stack)
+            player_score, score_desc = self.score_pegging_stack(stack)
 
-            msg = f'{player.name} pegged {peg_card}\n\n'
-            if count in (15, 31):
-                msg += f'Stack Value: {count}, 2 points for {player.name}\n'
+            if stack_value in (15, 31):
                 board.add_points(player, 2)
-            else:
-                msg += f'Stack Value: {count}\n'
+            if player_score:
+                board.add_points(player, player_score)
 
-            if stack_score:
-                msg += f'Score :      {stack_score} for {score_desc}\n'
-
-            msg += f'Stack:       {stack}\n'
-
-            self._game_message(msg)
+            self._display.player_pegged(player, peg_card, stack, stack_value, player_score, score_desc)
             return False
         else:
-            msg = f'Player {player.name} said GO\n'
-            self._game_message(msg)
+            self._display.player_said_go(player)
             return True
 
     def pegging(self, dealer, non_dealer, dealer_hand, non_dealer_hand, turn_card, board):
         stack = []
 
+        dealer_start_points = board.player_score(dealer)
+        non_dealer_start_points = board.player_score(non_dealer)
         p1, p2 = non_dealer, dealer
         p1_hand, p2_hand = non_dealer_hand.copy(), dealer_hand.copy()
         p2_go = True
@@ -138,7 +108,7 @@ class CribGame:
             p1_go = self.play_pegging_card(p1, stack, p1_hand, turn_card, board)
             if p1_go:
                 if p2_go:
-                    self._game_message(f'Last player was {p1.name}, 1 point (both could not go)')
+                    self._display.no_player_can_go(p1)
                     board.add_points(p1, 1)
                     p1, p2 = p2, p1
                     p1_hand, p2_hand = p2_hand, p1_hand
@@ -147,7 +117,7 @@ class CribGame:
 
             else:
                 if self.stack_count(stack) == 31:
-                    self._game_message(f'Last player was {p1.name}, (stack at 31)')
+                    self._display.stack_at_31(p1)
                     if not (p1_hand or p2_hand):
                         break
                     p1, p2 = p2, p1
@@ -155,53 +125,50 @@ class CribGame:
                     reset_stack()
                     continue
                 elif not (p1_hand or p2_hand):
-                    self._game_message(f'Last player was {p1.name}, 1 point (no cards left)')
+                    self._display.no_pegging_cards_left(p1)
                     board.add_points(p1, 1)
                     break
 
             p2_go = self.play_pegging_card(p2, stack, p2_hand, turn_card, board)
             if p2_go:
                 if p1_go:
-                    self._game_message(f'Last player was {p2.name}, 1 point (both could not go)')
+                    self._display.no_player_can_go(p2)
                     board.add_points(p2, 1)
                     reset_stack()
                     continue
 
             else:
                 if self.stack_count(stack) == 31:
-                    self._game_message(f'Last player was {p2.name}, (stack at 31)')
+                    self._display.stack_at_31(p2)
                     if not (p1_hand or p2_hand):
                         break
                     reset_stack()
                     continue
                 elif not (p1_hand or p2_hand):
-                    self._game_message(f'Last player was {p2.name}, 1 point (no cards left)')
+                    self._display.no_pegging_cards_left(p2)
                     board.add_points(p2, 1)
                     break
 
-        self._game_message(f'End of pegging score: {board}')
+        self._display.end_of_pegging(board)
+        self._stats.add_pegging_score(dealer, board.player_score(dealer) - dealer_start_points)
+        self._stats.add_pegging_score(non_dealer, board.player_score(non_dealer) - non_dealer_start_points)
 
-    def score_hand(self, pl, hand, turn_card, board, is_box):
-        hand_or_box = 'Hand' if not is_box else 'Box'
-        score_msg = f'{hand_or_box} score for {pl.name}\n'
-        score_msg += f' Cards : {hand}\n'
-        score_msg += f' Turn  : {turn_card}\n\n\n'
-
+    def score_hand(self, player, hand, turn_card, board, is_box):
         sc, breakdown = score.score_hand_with_breakdown(hand, turn_card, is_box)
-
-        score_msg += f'{score.breakdown_tostring(breakdown)}\n'
-        score_msg += f'Score    : {sc}\n'
-
-        self._game_message(score_msg)
-        board.add_points(pl, sc)
+        board.add_points(player, sc)
+        self._display.score_hand(player, hand, turn_card, sc, score.breakdown_tostring(breakdown), is_box)
+        if is_box:
+            self._stats.add_box_score(player, sc)
+        else:
+            self._stats.add_hand_score(player, sc)
 
     def play(self,  board=None):
-        board = board or CribBoard(self._player1, self._player2, 121)
+        board = board or Board(self._player1, self._player2, 121)
         deck = Deck()
         deck.shuffle()
         dealer, non_dealer, dealer_card, non_dealer_card = self.decide_dealer(deck)
 
-        self._game_message(f'{dealer.name} cut {dealer_card} and will deal, {non_dealer.name} cut {non_dealer_card}')
+        self._display.cut(dealer, dealer_card, non_dealer, non_dealer_card )
 
         while True:
             try:
@@ -229,14 +196,13 @@ class CribGame:
 
                 dealer, non_dealer = non_dealer, dealer
 
-                self._game_message(f'New dealer: {dealer.name},\n Current score {board}')
-
+                self._display.new_dealer(dealer, board)
             except GameWonException as gwe:
                 self._trace(gwe)
-                self._announce_win(board)
+                self._display.announce_win(board)
                 break
 
 
 if __name__ == '__main__':
-    game = CribGame(DumbComputerPlayer(), DumbComputerPlayer(), 121, messages_enabled=True, trace_enabled=True)
+    game = Game(DumbComputerPlayer(), DumbComputerPlayer(), 121, trace_enabled=True)
     game.play()

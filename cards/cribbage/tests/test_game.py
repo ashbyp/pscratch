@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from cards.base import card
-from cards.cribbage import player, game
+from cards.cribbage import player, game, display
 
 
 class TestGame(TestCase):
@@ -9,34 +9,8 @@ class TestGame(TestCase):
     def setUp(self):
         self._p1 = player.DumbComputerPlayer('p1')
         self._p2 = player.DumbComputerPlayer('p2')
-        self._game = game.CribGame(self._p1, self._p2, 121, messages_enabled=False, trace_enabled=False)
-        self._board = game.CribBoard(self._p1, self._p2, 121)
-
-    def test_CribBoard_constructor(self):
-        self.assertEqual(0, self._board.player_score(self._p1))
-        self.assertEqual(0, self._board.player_score(self._p2))
-        self.assertEqual('p1: 0, p2: 0', str(self._board))
-
-    def test_CribBoard_pegging(self):
-        self._board.add_points(self._p1, 10)
-        self._board.add_points(self._p1, 12)
-        self._board.add_points(self._p2, 3)
-        self._board.add_points(self._p2, 2)
-        self.assertEqual(22, self._board.player_score(self._p1))
-        self.assertEqual(5, self._board.player_score(self._p2))
-        self.assertEqual('p1: 22, p2: 5', str(self._board))
-
-    def test_CribBoard_player1_wins(self):
-        self._board.add_points(self._p1, 10)
-        with self.assertRaises(game.GameWonException):
-            self._board.add_points(self._p1, 112)
-        self.assertEqual(122, self._board.player_score(self._p1))
-
-    def test_CribBoard_player2_wins(self):
-        self._board.add_points(self._p2, 10)
-        with self.assertRaises(game.GameWonException):
-            self._board.add_points(self._p2, 112)
-        self.assertEqual(122, self._board.player_score(self._p2))
+        self._game = game.Game(self._p1, self._p2, 121, display=display.Display(False), trace_enabled=False)
+        self._board = game.Board(self._p1, self._p2, 121)
 
     def test_CribGame_decide_dealer(self):
         deck = card.Deck()
@@ -133,10 +107,10 @@ class TestGame(TestCase):
         self._game.pegging(self._p1, self._p2, dealer, non_dealer, card.Card.from_str('KC'), self._board)
 
         #  QH, AD, 10H, 3D, 7H = 31 scored by non_dealer 2+1 points
-        #  5D 5C 7S = last card for dealer, 1 point
+        #  5D 5C 7S = pair for non dealer 2, last card for dealer, 1 point
 
         self.assertEqual(1, self._board.player_score(self._p1))
-        self.assertEqual(2, self._board.player_score(self._p2))
+        self.assertEqual(4, self._board.player_score(self._p2))
 
     def test_CribGame_pegging_score_15(self):
         dealer = card.Card.from_str_list('5D, 3D, 8D, 7S')

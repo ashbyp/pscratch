@@ -5,9 +5,18 @@ import multiprocessing
 
 from cards.base import card
 from cards.cribbage import score
+from cards.cribbage.stats import Collector
+from cards.cribbage.game import Game
+from cards.cribbage.display import Display
+from cards.cribbage.player import DumbComputerPlayer
 
 
-class TargetScoreSimulation:
+class Simulator:
+    def run(self, *args, **kwargs):
+        raise NotImplementedError()
+
+
+class TargetScoreSimulation(Simulator):
 
     @staticmethod
     def attempts_for_score_v1(deck, target_score, verbose=False):
@@ -76,9 +85,30 @@ class TargetScoreSimulation:
         print(f'Score {target_score}, Num attempts {num_attempts}, avg = {np.mean(results)}, Time={time_taken}')
 
 
+class PlayerPerformanceSimulator(Simulator):
+
+    def __init__(self, player1, player2):
+        self._player1 = player1
+        self._player2 = player2
+
+    def run(self, num_games):
+        display = Display(False)
+        collector = Collector(self._player1, self._player2)
+        game = Game(self._player1, self._player2, stats=collector, display=display)
+
+        with multiprocessing.Pool() as pool:
+            for _ in range(num_games):
+                pool.apply(game.play)
+
+        print(collector)
+
+
 if __name__ == '__main__':
-    sim = TargetScoreSimulation()
-    sim.run(20, 20)
+    # sim = TargetScoreSimulation()
+    # sim.run(20, 20)
+    sim = PlayerPerformanceSimulator(DumbComputerPlayer(), DumbComputerPlayer())
+    sim.run(10000)
+
 
 
 

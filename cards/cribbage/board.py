@@ -7,7 +7,7 @@ class GameWonException(Exception):
         self._winning_player = winning_player
 
 
-class CribBoard:
+class Board:
 
     def __init__(self, player1, player2, target_points=121):
         self._board = OrderedDict({

@@ -9,7 +9,8 @@ from cards.cribbage import score
 from cards.cribbage.stats import Collector
 from cards.cribbage.game import Game
 from cards.cribbage.display import Display
-from cards.cribbage.player import  RandomComputerPlayer, ComputerPlayerV1
+from cards.cribbage.player import RandomComputerPlayer, ComputerPlayerV1, ComputerPlayerV2, \
+    ComputerPlayerV3, ComputerPlayerV4
 
 
 class Simulator:
@@ -102,16 +103,31 @@ class PlayerPerformanceSimulator(Simulator):
         collector = Collector(self._player1, self._player2)
         game = Game(self._player1, self._player2, stats=collector, display=display)
 
+        start_time = timeit.default_timer()
         for _ in range(num_games):
             game.play()
+        time_taken = timeit.default_timer() - start_time
 
-        print(f'Simulations: {num_games} :: {collector}')
+        print(f'Simulations: {num_games} :: {collector} :: Time {time_taken}')
         self.record_results(self.__class__.__name__, num_games, collector)
+        return collector
+
+
+class PlayerPerformanceComparisonSimulator(Simulator):
+    def run(self, num_sims, games_per_sim=1000):
+        v1_sim = PlayerPerformanceSimulator(ComputerPlayerV1())
+        [v1_sim.run(games_per_sim) for _ in range(num_sims)]
+        v2_sim = PlayerPerformanceSimulator(ComputerPlayerV2())
+        [v2_sim.run(games_per_sim) for _ in range(num_sims)]
+        v3_sim = PlayerPerformanceSimulator(ComputerPlayerV3())
+        [v3_sim.run(games_per_sim) for _ in range(num_sims)]
+        v4_sim = PlayerPerformanceSimulator(ComputerPlayerV4())
+        [v4_sim.run(games_per_sim) for _ in range(num_sims)]
 
 
 if __name__ == '__main__':
-    sim = PlayerPerformanceSimulator(ComputerPlayerV1())
-    sim.run(1000)
+    sim = PlayerPerformanceComparisonSimulator()
+    sim.run(1, 1000)
 
 
 

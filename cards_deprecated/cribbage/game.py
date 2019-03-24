@@ -1,9 +1,9 @@
-from cards.base.card import Deck
-from cards.cribbage.player import DumbComputerPlayer
-from cards.cribbage.board import Board, GameWonException
-from cards.cribbage import score
-from cards.cribbage.display import Display
-from cards.cribbage.stats import Collector
+from cards_deprecated.base.card import Deck
+from cards_deprecated.cribbage.player import DumbComputerPlayer
+from cards_deprecated.cribbage.board import Board, GameWonException
+from cards_deprecated.cribbage import score
+from cards_deprecated.cribbage.display import Display
+from cards_deprecated.cribbage.stats import Collector
 
 
 class Game:

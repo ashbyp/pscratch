@@ -5,12 +5,12 @@ import concurrent.futures
 import multiprocessing
 import random
 
-from cards.base import card
-from cards.cribbage import score
-from cards.cribbage.stats import Collector
-from cards.cribbage.game import Game
-from cards.cribbage.display import Display
-from cards.cribbage.player import RandomComputerPlayer, ComputerPlayerV1, ComputerPlayerV2, \
+from cards_deprecated.base import card
+from cards_deprecated.cribbage import score
+from cards_deprecated.cribbage.stats import Collector
+from cards_deprecated.cribbage.game import Game
+from cards_deprecated.cribbage.display import Display
+from cards_deprecated.cribbage.player import RandomComputerPlayer, ComputerPlayerV1, ComputerPlayerV2, \
     ComputerPlayerV3, ComputerPlayerV4
 
 

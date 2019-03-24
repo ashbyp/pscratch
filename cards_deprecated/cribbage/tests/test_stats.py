@@ -1,12 +1,12 @@
 from unittest import TestCase
 from functools import reduce
 
-from cards.cribbage.player import DumbComputerPlayer
-from cards.cribbage.stats import Collector
-from cards.cribbage.game import Game
-from cards.cribbage.display import Display
-from cards.cribbage.board import Board
-from cards.base.card import Card
+from cards_deprecated.cribbage.player import DumbComputerPlayer
+from cards_deprecated.cribbage.stats import Collector
+from cards_deprecated.cribbage.game import Game
+from cards_deprecated.cribbage.display import Display
+from cards_deprecated.cribbage.board import Board
+from cards_deprecated.base.card import Card
 
 
 class TestStats(TestCase):

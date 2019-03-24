@@ -1,7 +1,7 @@
 import random
 import itertools
-from cards.base.card import Card, standard_deck
-from cards.cribbage import score
+from cards_deprecated.base.card import Card, standard_deck
+from cards_deprecated.cribbage import score
 
 
 class Player:
@@ -70,7 +70,7 @@ class HumanPlayer(DumbComputerPlayer):  # for now
         super().__init__(name)
 
     def choose_discards(self, hand, your_box):
-        print(f'\nYour dealt cards are: {hand}')
+        print(f'\nYour dealt cards_deprecated are: {hand}')
         while True:
             try:
                 user_input = None
@@ -81,9 +81,9 @@ class HumanPlayer(DumbComputerPlayer):  # for now
                     if len(set(cards)) == 2:
                         return cards
                     else:
-                        print('Select two cards please, try again')
+                        print('Select two cards_deprecated please, try again')
                 else:
-                    print('Please select valid cards from your hand, try again')
+                    print('Please select valid cards_deprecated from your hand, try again')
             except ValueError as e:
                 print(f'Input error "{e}"')
 
@@ -109,7 +109,7 @@ class HumanPlayer(DumbComputerPlayer):  # for now
                     else:
                         return card
                 else:
-                    print('Selection is not a subset of your cards, try again')
+                    print('Selection is not a subset of your cards_deprecated, try again')
             except ValueError as e:
                 print(f'Input error "{e}"')
 
@@ -202,7 +202,7 @@ class ComputerPlayerV3(ComputerPlayerV2):
         self._deck = standard_deck()
 
     def choose_discards(self, hand, your_box):
-        # for each possible set of 4 cards in the hand
+        # for each possible set of 4 cards_deprecated in the hand
         #   find score for each possible turn card
         #   average the scores
         #   choose hand with highest average

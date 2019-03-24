@@ -1,6 +1,6 @@
 from unittest import TestCase
-from cards.cribbage.player import DumbComputerPlayer
-from cards.cribbage.board import Board, GameWonException
+from cards_deprecated.cribbage.player import DumbComputerPlayer
+from cards_deprecated.cribbage.board import Board, GameWonException
 
 
 class TestBoard(TestCase):

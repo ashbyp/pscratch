@@ -1,6 +1,6 @@
 from unittest import TestCase
-from cards.cribbage import score
-from cards.base.card import Card
+from cards_deprecated.cribbage import score
+from cards_deprecated.base.card import Card
 
 
 class TestScore(TestCase):

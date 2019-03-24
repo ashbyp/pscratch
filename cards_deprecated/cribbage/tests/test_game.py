@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from cards.base import card
-from cards.cribbage import player, game, display
+from cards_deprecated.base import card
+from cards_deprecated.cribbage import player, game, display
 
 
 class TestGame(TestCase):

@@ -1,6 +1,6 @@
 import random
 from unittest import TestCase
-from cards.base.card import Card, standard_deck
+from cards_deprecated.base.card import Card, standard_deck
 
 
 class TestCard(TestCase):

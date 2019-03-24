@@ -1,4 +1,4 @@
-from cards.base import card
+from cards_deprecated.base import card
 import itertools
 
 

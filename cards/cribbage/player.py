@@ -190,6 +190,7 @@ class ComputerPlayerV2(ComputerPlayerV1):
 
 
 class ComputerPlayerV3(ComputerPlayerV2):
+    ME_COUNT = 1
 
     def __init__(self, name=None):
         if not name:
@@ -227,6 +228,7 @@ class ComputerPlayerV3(ComputerPlayerV2):
 
 
 class ComputerPlayerV4(ComputerPlayerV3):
+    ME_COUNT = 1
 
     def __init__(self, name=None):
         if not name:

@@ -3,6 +3,7 @@ import datetime
 import numpy as np
 import concurrent.futures
 import multiprocessing
+import random
 
 from cards.base import card
 from cards.cribbage import score
@@ -114,20 +115,28 @@ class PlayerPerformanceSimulator(Simulator):
 
 
 class PlayerPerformanceComparisonSimulator(Simulator):
-    def run(self, num_sims, games_per_sim=1000):
+    def run(self, num_sims, games_per_sim=1000, seed=None):
+        if seed:
+            random.seed(seed)
         v1_sim = PlayerPerformanceSimulator(ComputerPlayerV1())
         [v1_sim.run(games_per_sim) for _ in range(num_sims)]
+        if seed:
+            random.seed(seed)
         v2_sim = PlayerPerformanceSimulator(ComputerPlayerV2())
         [v2_sim.run(games_per_sim) for _ in range(num_sims)]
+        if seed:
+            random.seed(seed)
         v3_sim = PlayerPerformanceSimulator(ComputerPlayerV3())
         [v3_sim.run(games_per_sim) for _ in range(num_sims)]
+        if seed:
+            random.seed(seed)
         v4_sim = PlayerPerformanceSimulator(ComputerPlayerV4())
         [v4_sim.run(games_per_sim) for _ in range(num_sims)]
 
 
 if __name__ == '__main__':
     sim = PlayerPerformanceComparisonSimulator()
-    sim.run(1, 1000)
+    sim.run(1, 1000, seed=123)
 
 
 

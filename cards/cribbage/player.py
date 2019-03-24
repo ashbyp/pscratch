@@ -206,7 +206,7 @@ class ComputerPlayerV3(ComputerPlayerV2):
         #   find score for each possible turn card
         #   average the scores
         #   choose hand with highest average
-        # return super().choose_discards(hand)
+        # this method sucks in sim mode, ok for interactive
 
         possible_turns = [x for x in self._deck if x not in hand]
         hand_scores = []

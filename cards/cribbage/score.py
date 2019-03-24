@@ -65,7 +65,7 @@ def breakdown_tostring(bd):
                 s += '\n'
             s += '%-9s: %s' % (score_type.capitalize(),
                                ', '.join(map(str, map(lambda x: sorted(x)
-                               if isinstance(x, list) else x, (bd[score_type])))))
+                                    if isinstance(x, list) else x, (bd[score_type])))))
     return s
 
 
@@ -117,7 +117,7 @@ def choose_best_hand(hand, hand_size):
         if not best:
             best = [(score, comb)]
         elif score > best[0][0]:
-            best = [(score,  comb)]
+            best = [(score, comb)]
         elif score == best[0][0]:
             best.append((score, comb))
 
@@ -128,7 +128,7 @@ def run_some_hands(num):
     deck = card.Deck()
     for _ in range(num):
         deck.shuffle()
-        print('*'*70)
+        print('*' * 70)
         hands = deck.deal(1, 4)
         turn_card = deck.next_card()
 
@@ -147,5 +147,3 @@ def run_some_hands(num):
 
 if __name__ == '__main__':
     run_some_hands(100)
-
-

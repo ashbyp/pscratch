@@ -11,7 +11,10 @@ kiwisolver==1.0.1
 matplotlib==3.0.2
 multidict==4.5.2
 numpy==1.15.4
+pygame==1.9.4
 pyparsing==2.3.1
+PyQt5==5.12.1
+PyQt5-sip==4.19.15
 python-dateutil==2.7.5
 requests==2.21.0
 scipy==1.2.0

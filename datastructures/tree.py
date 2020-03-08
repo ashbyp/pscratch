@@ -30,14 +30,28 @@ class Node:
 
 
 def create_tree():
+    #           10
+    #      12          7
+    #    5    11    3    13
+
     n = Node(10)
     n.left = Node(12)
     n.left.left = Node(5)
     n.left.right = Node(11)
     n.right = Node(7)
     n.right.left = Node(3)
-    n.right.right = Node(13)
+    n.right.right = Node(130)
     return n
+
+
+def max_sum_to_leaf(n):
+    # if not n:
+    #     return 0
+
+    ls = 0 if not n.left else max_sum_to_leaf(n.left)
+    rs = 0 if not n.right else max_sum_to_leaf(n.right)
+
+    return ls + n.value if ls > rs else rs + n.value
 
 
 def print_tree(n):
@@ -51,4 +65,5 @@ def print_tree(n):
 if __name__ == '__main__':
     tree = create_tree()
     print_tree(tree)
+    print(max_sum_to_leaf(tree))
 

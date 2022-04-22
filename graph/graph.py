@@ -48,11 +48,11 @@ class Graph:
 
 if __name__ == '__main__':
     data = [('A', 'B'), ('B', 'C'), ('B', 'D'), ('C', 'D'), ('E', 'F'), ('F', 'C')]
-    g1 = Graph(data, True)
-    g1.print()
-    g2 = Graph(data, False)
-    g2.print()
+    # g1 = Graph(data, True)
+    # g1.print()
+    # g2 = Graph(data, False)
+    # g2.print()
     g3 = Graph.from_csv('data.csv')
     g3.print()
 
-    print(g3.find_path('a', 'd'))
+    print(g3.find_path('a', 'b'))

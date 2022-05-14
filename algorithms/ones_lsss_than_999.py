@@ -1,5 +1,7 @@
+from utils.stuff import *
 
 
+@measure
 def count_ones_less_than(n):
     # count = 0
     # for x in range(n):
@@ -10,4 +12,4 @@ def count_ones_less_than(n):
 
 
 if __name__ == '__main__':
-    print(count_ones_less_than(1000))
+    print(count_ones_less_than(10000))

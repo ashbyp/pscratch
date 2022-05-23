@@ -1,0 +1,4 @@
+
+
+def register():
+    return "bananas"

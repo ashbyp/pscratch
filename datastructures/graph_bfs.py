@@ -12,7 +12,7 @@ queue = []     #Initialize a queue
 
 
 def bfs(visited, graph, node):
-  #visited.append(node)
+  visited.append(node)
   queue.append(node)
 
   while queue:

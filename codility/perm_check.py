@@ -58,3 +58,4 @@ def solution(A):
 if __name__ == '__main__':
     print(solution([4,1,3,2]))
     print(solution([4,1,3]))
+    print(solution([2, 3, 4]))

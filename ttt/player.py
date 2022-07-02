@@ -1,13 +1,17 @@
+from abc import ABC, abstractmethod
 
-class Player:
+
+class Player(ABC):
 
     def __init__(self, name, symbol):
         self.name = name
         self.symbol = symbol
         print(f'{self.name} is {self.symbol}')
+        super().__init__()
 
-    def play(self, grid, grid_size):
-        raise NotImplemented()
+    @abstractmethod
+    def play(self, grid, size):
+        pass
 
     def __str__(self):
         return self.name

@@ -1,3 +1,10 @@
+
+
+
+def fill_board(size, value):
+    return [[value for _ in range(size)] for _ in range(size)]
+
+
 class Game:
 
     NOUGHT = '0'
@@ -14,22 +21,17 @@ class Game:
         if self.grid_size != 3:
             raise ValueError('only a grid size of 3 is supported')
 
-    @staticmethod
-    def print_grid(grid):
-        print("\n")
-        print("\t     |     |")
-        print("\t  {}  |  {}  |  {}".format(grid[0][0], grid[0][1], grid[0][2]))
-        print('\t_____|_____|_____')
-
-        print("\t     |     |")
-        print("\t  {}  |  {}  |  {}".format(grid[1][0], grid[1][1], grid[1][2]))
-        print('\t_____|_____|_____')
-
-        print("\t     |     |")
-
-        print("\t  {}  |  {}  |  {}".format(grid[2][0], grid[2][1], grid[2][2]))
-        print("\t     |     |")
-        print("\n")
+    def print_grid(self, grid):
+        board = """
+             |     |   
+          %s  |  %s  |  %s
+        -----|-----|-----
+          %s  |  %s  |  %s
+        -----|-----|-----
+          %s  |  %s  |  %s
+             |     |
+        """
+        print(board % tuple(grid[i][j] for i in range(self.grid_size) for j in range(self.grid_size)))
 
     def invalid_play(self, grid, coord):
         if len(coord) != 2:
@@ -74,7 +76,7 @@ class Game:
         p1 = self.player1
         p2 = self.player2
 
-        grid = [[self.BLANK for _ in range(self.grid_size)] for _ in range(self.grid_size)]
+        grid = fill_board(self.grid_size, self.BLANK)
         plays = 0
         max_plays = self.grid_size ** 2
 
@@ -86,21 +88,22 @@ class Game:
                 coord = p1.play(grid, self.grid_size)
 
             plays += 1
-            print(f'{self.player1} played {coord}')
-
+            print(f'{p1} played {coord}')
             grid[coord[0]-1][coord[1]-1] = p1.symbol
-            self.print_grid(grid)
 
             winning_symbol = self.check_winner(grid)
             if winning_symbol:
+                self.print_grid(grid)
                 winner = p1.name if winning_symbol == p1.symbol else p2.name
                 print(f'{winner} has won!')
                 break
 
             if plays == max_plays:
+                self.print_grid(grid)
                 print('Game is drawn')
                 break
 
             p1, p2 = p2, p1
 
         print('Done')
+

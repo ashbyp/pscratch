@@ -1,6 +1,6 @@
 from unittest import TestCase
-from ttt.player import Player
-from ttt.game import Game
+from tictactoe.player import Player
+from tictactoe.game import Game
 
 
 class DummyPlayer(Player):

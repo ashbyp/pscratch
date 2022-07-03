@@ -1,5 +1,5 @@
 import re
-from ttt.player import Player
+from tictactoe.player import Player
 
 
 class HumanPlayer(Player):

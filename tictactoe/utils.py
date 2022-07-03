@@ -28,3 +28,7 @@ def get_line_sets(size):
     all_sets.append(diag_set)
 
     return  all_sets
+
+
+def init_grid(size, value):
+    return [[value for _ in range(size)] for _ in range(size)]

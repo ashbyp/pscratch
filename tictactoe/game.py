@@ -1,8 +1,4 @@
-
-
-
-def fill_board(size, value):
-    return [[value for _ in range(size)] for _ in range(size)]
+from tictactoe import utils
 
 
 class Game:
@@ -17,21 +13,22 @@ class Game:
         self.grid_size = grid_size
         print(f'TicTacToe {self.player1} vs {self.player2}')
 
-        # TODO: allow other grid sizes
-        if self.grid_size != 3:
-            raise ValueError('only a grid size of 3 is supported')
-
     def print_grid(self, grid):
-        board = """
-             |     |   
-          %s  |  %s  |  %s
-        -----|-----|-----
-          %s  |  %s  |  %s
-        -----|-----|-----
-          %s  |  %s  |  %s
-             |     |
-        """
-        print(board % tuple(grid[i][j] for i in range(self.grid_size) for j in range(self.grid_size)))
+        b = "\n"
+        for row in range(self.grid_size):
+            for col in range(self.grid_size):
+                if col == self.grid_size - 1:
+                    b += '  %s  \n'
+                else:
+                    b += '  %s  |'
+            if row != self.grid_size -1 :
+                for col in range(self.grid_size):
+                    if col == self.grid_size - 1:
+                        b += '------\n'
+                    else:
+                        b += '-----|'
+
+        print(b % tuple(grid[i][j] for i in range(self.grid_size) for j in range(self.grid_size)))
 
     def invalid_play(self, grid, coord):
         if len(coord) != 2:
@@ -47,36 +44,18 @@ class Game:
         return False
 
     def check_winner(self, grid):
-        # rows and cols
-        for i in range(self.grid_size):
-            if all(grid[i][j] == self.NOUGHT for j in range(self.grid_size)):
-                return self.NOUGHT
-            if all(grid[i][j] == self.CROSS for j in range(self.grid_size)):
-                return self.CROSS
-            if all(grid[j][i] == self.NOUGHT for j in range(self.grid_size)):
-                return self.NOUGHT
-            if all(grid[j][i] == self.CROSS for j in range(self.grid_size)):
-                return self.CROSS
-
-        # top-left to bottom-right
-        if all(grid[i][i] == self.NOUGHT for i in range(self.grid_size)):
-            return self.NOUGHT
-        if all(grid[i][i] == self.CROSS for i in range(self.grid_size)):
-            return self.CROSS
-
-        # top-right to bottom-left
-        if all(grid[i][2-i] == self.NOUGHT for i in range(self.grid_size)):
-            return self.NOUGHT
-        if all(grid[i][2-i] == self.CROSS for i in range(self.grid_size)):
-            return self.CROSS
-
+        for win_set in utils.get_line_sets(self.grid_size):
+            if all(grid[x[0]][x[1]] == Game.NOUGHT for x in win_set):
+                return Game.NOUGHT
+            if all(grid[x[0]][x[1]] == Game.CROSS for x in win_set):
+                return Game.CROSS
         return None
 
     def play(self):
         p1 = self.player1
         p2 = self.player2
 
-        grid = fill_board(self.grid_size, self.BLANK)
+        grid = utils.init_grid(self.grid_size, self.BLANK)
         plays = 0
         max_plays = self.grid_size ** 2
 
@@ -106,4 +85,3 @@ class Game:
             p1, p2 = p2, p1
 
         print('Done')
-

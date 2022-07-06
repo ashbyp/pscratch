@@ -1,5 +1,6 @@
 import socket
 import re
+import time
 from tictactoe.message import Message
 from tictactoe import utils
 
@@ -41,9 +42,17 @@ class TicTacToeClient:
     @staticmethod
     def _get_connection(host, port):
         print(f'Establishing connection to server {host}:{port} ({socket.gethostbyname(host)})')
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((socket.gethostbyname(host), port))
-        return s
+        retries = 10
+        while retries > 0:
+            try:
+                s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                s.connect((socket.gethostbyname(host), port))
+                return 10
+            except ConnectionRefusedError as _:
+                retries -= 1
+                print(f'Server not found {retries} retries remaining')
+                time.sleep(2)
+        raise ConnectionRefusedError('no server found')
 
     def _handshake(self):
         msg = Message.name_message(self.name)

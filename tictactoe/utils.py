@@ -27,7 +27,7 @@ def get_line_sets(size):
         diag_set.add((row_col, size - 1 - row_col))
     all_sets.append(diag_set)
 
-    return  all_sets
+    return all_sets
 
 
 def init_grid(size, value):
@@ -43,7 +43,7 @@ def print_grid(grid):
                 b += '  %s  \n'
             else:
                 b += '  %s  |'
-        if row != grid_size -1 :
+        if row != grid_size - 1:
             for col in range(grid_size):
                 if col == grid_size - 1:
                     b += '------\n'

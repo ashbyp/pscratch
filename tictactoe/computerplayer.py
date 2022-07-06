@@ -1,4 +1,5 @@
-import random, time
+import random
+import time
 from tictactoe.player import Player
 from tictactoe.game import Game
 from tictactoe import utils
@@ -6,7 +7,7 @@ from tictactoe import utils
 
 class ComputerPlayer(Player):
     def __init__(self, symbol, think=True):
-        super().__init__('WOPPER', symbol)
+        super().__init__('WOPR', symbol)
         self.think = think
 
     def stop_win(self, grid, size):

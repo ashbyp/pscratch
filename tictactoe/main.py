@@ -10,7 +10,7 @@ def get_grid_size():
     size = input('Enter grid size: (3)')
     try:
         size = int(size)
-    except:
+    except ValueError as _:
         size = 3
     return size
 
@@ -19,9 +19,18 @@ def run_server():
     size = get_grid_size()
     players = [RemotePlayer(Game.NOUGHT), ComputerPlayer(Game.CROSS)]
     while True:
-        random.shuffle(players)
-        g = Game(players[0], players[1], size)
-        g.play()
+        try:
+            random.shuffle(players)
+            g = Game(players[0], players[1], size)
+            g.play()
+        except ConnectionResetError as _:
+            print('Connection reset')
+            ans = input('Restart? [y]/n: ')
+            if not ans or ans == 'Y' or ans == 'y':
+                players = [RemotePlayer(Game.NOUGHT), ComputerPlayer(Game.CROSS)]
+            else:
+                print('Done')
+                return
 
 
 def run_local():

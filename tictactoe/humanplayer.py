@@ -15,7 +15,3 @@ class HumanPlayer(Player):
 
     def result(self, grid, result):
         pass
-
-
-
-

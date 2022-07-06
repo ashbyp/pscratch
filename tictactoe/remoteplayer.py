@@ -34,4 +34,3 @@ class RemotePlayer(Player):
             name = msg.data['name']
             Message.send(conn, Message.symbol_message(symbol))
             return conn, name
-

@@ -42,13 +42,17 @@ class ComputerPlayer(Player):
         return random.choice([(i, j) for i in range(size) for j in range(size)
                               if grid[i][j] == Game.BLANK])
 
-    def play(self, grid, size):
+    def enter_coord(self, grid):
         print(f'{self.name} thinking...')
         if self.think:
             time.sleep(1)
-
+        size = len(grid[0])
         grid_ref = self.check_win(grid, size) or self.stop_win(grid, size) \
                    or self.choose_potential_win(grid, size) or self.choose_random(grid, size)
         return grid_ref[0] + 1, grid_ref[1] + 1
 
+    def reenter_coord(self, grid):
+        return self.enter_coord(grid)
 
+    def result(self, grid, result):
+        pass

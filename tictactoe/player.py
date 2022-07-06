@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 
 
 class Player(ABC):
-
     def __init__(self, name, symbol):
         self.name = name
         self.symbol = symbol
@@ -10,7 +9,15 @@ class Player(ABC):
         super().__init__()
 
     @abstractmethod
-    def play(self, grid, size):
+    def enter_coord(self, grid):
+        pass
+
+    @abstractmethod
+    def reenter_coord(self, grid):
+        pass
+
+    @abstractmethod
+    def result(self, grid, result):
         pass
 
     def __str__(self):

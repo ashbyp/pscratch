@@ -3,6 +3,9 @@ from tictactoe import utils
 
 class Game:
 
+    WIN = "win"
+    LOSE = "lose"
+    DRAW = "draw"
     NOUGHT = '0'
     CROSS = 'X'
     BLANK = ' '
@@ -12,23 +15,6 @@ class Game:
         self.player2 = player2
         self.grid_size = grid_size
         print(f'TicTacToe {self.player1} vs {self.player2}')
-
-    def print_grid(self, grid):
-        b = "\n"
-        for row in range(self.grid_size):
-            for col in range(self.grid_size):
-                if col == self.grid_size - 1:
-                    b += '  %s  \n'
-                else:
-                    b += '  %s  |'
-            if row != self.grid_size -1 :
-                for col in range(self.grid_size):
-                    if col == self.grid_size - 1:
-                        b += '------\n'
-                    else:
-                        b += '-----|'
-
-        print(b % tuple(grid[i][j] for i in range(self.grid_size) for j in range(self.grid_size)))
 
     def invalid_play(self, grid, coord):
         if len(coord) != 2:
@@ -60,11 +46,11 @@ class Game:
         max_plays = self.grid_size ** 2
 
         while True:
-            self.print_grid(grid)
-            coord = p1.play(grid, self.grid_size)
+            utils.print_grid(grid)
+            coord = p1.enter_coord(grid)
             while self.invalid_play(grid, coord):
                 print(f' ** invalid play {coord}')
-                coord = p1.play(grid, self.grid_size)
+                coord = p1.reenter_coord(grid)
 
             plays += 1
             print(f'{p1} played {coord}')
@@ -72,14 +58,17 @@ class Game:
 
             winning_symbol = self.check_winner(grid)
             if winning_symbol:
-                self.print_grid(grid)
-                winner = p1.name if winning_symbol == p1.symbol else p2.name
-                print(f'{winner} has won!')
+                utils.print_grid(grid)
+                print(f'{p1.name} has won!')
+                p1.result(grid, self.WIN)
+                p2.result(grid, self.LOSE)
                 break
 
             if plays == max_plays:
-                self.print_grid(grid)
+                utils.print_grid(grid)
                 print('Game is drawn')
+                p1.result(grid, self.DRAW)
+                p2.result(grid, self.DRAW)
                 break
 
             p1, p2 = p2, p1

@@ -32,3 +32,22 @@ def get_line_sets(size):
 
 def init_grid(size, value):
     return [[value for _ in range(size)] for _ in range(size)]
+
+
+def print_grid(grid):
+    grid_size = len(grid[0])
+    b = "\n"
+    for row in range(grid_size):
+        for col in range(grid_size):
+            if col == grid_size - 1:
+                b += '  %s  \n'
+            else:
+                b += '  %s  |'
+        if row != grid_size -1 :
+            for col in range(grid_size):
+                if col == grid_size - 1:
+                    b += '------\n'
+                else:
+                    b += '-----|'
+
+    print(b % tuple(grid[i][j] for i in range(grid_size) for j in range(grid_size)))

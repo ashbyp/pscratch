@@ -52,6 +52,10 @@ class TicTacToeClient:
         return msg.data['symbol']
 
 
-if __name__ == '__main__':
+def main():
     client = TicTacToeClient('localhost', 65432, name='paul')
     client.play()
+
+
+if __name__ == '__main__':
+    main()

@@ -25,7 +25,7 @@ class RemotePlayer(Player):
     @staticmethod
     def _wait_for_remote_player(symbol):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.bind(('127.0.0.1', 65432))
+            s.bind(('0.0.0.0', 65432))
             print('Waiting for player to connect')
             s.listen()
             conn, address = s.accept()

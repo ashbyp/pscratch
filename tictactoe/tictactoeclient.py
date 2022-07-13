@@ -47,7 +47,7 @@ class TicTacToeClient:
             try:
                 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 s.connect((socket.gethostbyname(host), port))
-                return 10
+                return s
             except ConnectionRefusedError as _:
                 retries -= 1
                 print(f'Server not found {retries} retries remaining')

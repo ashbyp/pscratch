@@ -14,3 +14,17 @@ def measure(name):
                 print(f'Function:{name} elapsed seconds {elapsed}')
         return _time_it
     return decorate
+
+
+class C:
+    A: str = "hello"
+
+    def __init__(self):
+        self.A = 'selfA'
+        C.A = 'classA'
+
+
+if __name__ == '__main__':
+    c = C()
+    print(c.A)
+    print(C.A)

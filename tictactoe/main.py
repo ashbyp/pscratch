@@ -1,4 +1,7 @@
 import random
+import signal
+from threading import Thread
+from json.decoder import JSONDecodeError
 
 from tictactoe.game import Game
 from tictactoe.humanplayer import HumanPlayer
@@ -15,22 +18,36 @@ def get_grid_size():
     return size
 
 
-def run_server():
-    size = get_grid_size()
-    players = [RemotePlayer(Game.NOUGHT), ComputerPlayer(Game.CROSS)]
+def game_thread(players, size, game_id):
+    print(f'Starting game {game_id}')
     while True:
         try:
             random.shuffle(players)
             g = Game(players[0], players[1], size)
             g.play()
-        except ConnectionResetError as _:
-            print('Connection reset')
-            ans = input('Restart? [y]/n: ')
-            if not ans or ans == 'Y' or ans == 'y':
-                players = [RemotePlayer(Game.NOUGHT), ComputerPlayer(Game.CROSS)]
-            else:
-                print('Done')
-                return
+        except ConnectionResetError as cre:
+            print(f'Connection reset on game {game_id} - {cre}')
+            return
+        except JSONDecodeError as jde:
+            print(f'Message error on game id {game_id} - {jde}')
+            return
+
+
+def ctrl_c_handler(signum, frame):
+    print('Ctrl+C received, exiting')
+    exit(0)
+
+
+def run_server():
+    signal.signal(signal.SIGINT, ctrl_c_handler)
+    size = get_grid_size()
+    game_id = 0
+
+    while True:
+        players = [RemotePlayer(Game.NOUGHT), ComputerPlayer(Game.CROSS, think_seconds=0.25)]
+        game_id += 1
+        game = Thread(target=game_thread, args=(players, size, game_id))
+        game.start()
 
 
 def run_local():

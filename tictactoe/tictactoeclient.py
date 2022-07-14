@@ -1,7 +1,7 @@
 import socket
 import re
 import time
-from tictactoe.message import Message
+from tictactoe.message import MessageType, Message
 from tictactoe import utils
 
 
@@ -15,12 +15,12 @@ class TicTacToeClient:
     def play(self):
         while True:
             msg = Message.get_next(self.conn)
-            if msg.code == Message.ENTER_COORD:
+            if msg.code == MessageType.ENTER_COORD:
                 self._process_play_message(msg)
-            elif msg.code == Message.REENTER_COORD:
+            elif msg.code == MessageType.REENTER_COORD:
                 print(' *** invalid coord, try again')
                 self._process_play_message(msg)
-            elif msg.code == Message.RESULT:
+            elif msg.code == MessageType.RESULT:
                 self._process_result_message(msg)
             else:
                 print('Received invalid message:', msg)

@@ -14,7 +14,7 @@ def histo(data, bins=3):
         else:
             element_count[i] = element_count[i] + 1
 
-    bucket_size = (maxval - minval) // bins
+    bucket_size = (maxval - minval + 1) // bins
     print(f'bucket size={bucket_size}')
 
     for i in range(minval, maxval + 1, bucket_size):

@@ -2,32 +2,32 @@ from functools import cache
 
 
 @cache
-def get_line_sets(size):
-    all_sets = []
+def get_win_lines(size):
+    all_lines = []
 
     for row in range(size):
-        row_set = set()
+        row_line = []
         for col in range(size):
-            row_set.add((row, col))
-        all_sets.append(row_set)
+            row_line.append((row, col))
+        all_lines.append(row_line)
 
     for col in range(size):
-        col_set = set()
+        col_line = []
         for row in range(size):
-            col_set.add((row, col))
-        all_sets.append(col_set)
+            col_line.append((row, col))
+        all_lines.append(col_line)
 
-    diag_set = set()
+    diag_row = []
     for row_col in range(size):
-        diag_set.add((row_col, row_col))
-    all_sets.append(diag_set)
+        diag_row.append((row_col, row_col))
+    all_lines.append(diag_row)
 
-    diag_set = set()
+    diag_row = []
     for row_col in range(size):
-        diag_set.add((row_col, size - 1 - row_col))
-    all_sets.append(diag_set)
+        diag_row.append((row_col, size - 1 - row_col))
+    all_lines.append(diag_row)
 
-    return all_sets
+    return all_lines
 
 
 def init_grid(size, value):

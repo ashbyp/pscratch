@@ -1,12 +1,17 @@
+from typing import Callable
+
 import numpy as np
 import copy
 
+PythonMatrix = list[list[int | float | None]]
+PythonVector = list[int | float | None]
 
-def init(rows: int, cols: int, value: int | float | None = None):
+
+def init(rows: int, cols: int, value: int | float | None = None) -> PythonMatrix:
     return [[value for _ in range(cols)] for _ in range(rows)]
 
 
-def printm(a: list[list] | int | float) -> None:
+def print_result(a: PythonMatrix | int | float) -> None:
     if isinstance(a, list):
         print('[', end='')
         for row in range(len(a)):
@@ -25,7 +30,7 @@ def printm(a: list[list] | int | float) -> None:
         print(a)
 
 
-def dot(a: list[list], b: list[list]) -> list[list]:
+def dot(a: PythonMatrix, b: PythonMatrix) -> PythonMatrix:
     c = init(len(a), len(b[0]), 0)
     for i in range(len(a)):
         for j in range(len(b[0])):
@@ -34,7 +39,7 @@ def dot(a: list[list], b: list[list]) -> list[list]:
     return c
 
 
-def multiply(a: list[list], b: list[list]) -> list[list]:
+def multiply(a: PythonMatrix, b: PythonMatrix) -> PythonMatrix:
     c = init(len(a), len(a[0]), None)
     for row in range(len(a)):
         for col in range(len(a[0])):
@@ -42,7 +47,7 @@ def multiply(a: list[list], b: list[list]) -> list[list]:
     return c
 
 
-def transpose(a: list[list]) -> list[list]:
+def transpose(a: PythonMatrix) -> PythonMatrix:
     t = init(len(a[0]), len(a))
 
     for row in range(len(a)):
@@ -51,61 +56,84 @@ def transpose(a: list[list]) -> list[list]:
     return t
 
 
-def inner(a: list, b: list) -> int | float:
+def inner(a: PythonVector, b: PythonVector) -> int | float:
     res = 0
     for i in range(len(a)):
         res += a[i] * b[i]
     return res
 
 
-def trace(a: list[list]) -> int | float:
+def trace(a: PythonMatrix) -> int | float:
     res = 0
     for i in range(min(len(a), len(a[0]))):
-            res += a[i][i]
+        res += a[i][i]
     return res
 
 
-def det(A: list[list]) -> int | float:
+def det(a: PythonMatrix) -> int | float:
     # store indices in list for row referencing
-    indices = list(range(len(A)))
+    indices = list(range(len(a)))
 
-    # when at 2x2 submatrices recursive calls end
-    if len(A) == 2 and len(A[0]) == 2:
-        val = A[0][0] * A[1][1] - A[1][0] * A[0][1]
+    # when at 2x2 sub-matrices recursive calls end
+    if len(a) == 2 and len(a[0]) == 2:
+        val = a[0][0] * a[1][1] - a[1][0] * a[0][1]
         return val
 
     total = 0
-    # define submatrix for focus column and
+    # define sub-matrix for focus column and
     # call this function
     for fc in indices:  # A) for each focus column, ...
-        # find the submatrix ...
-        As = copy.copy(A)  # B) make a copy, and ...
-        As = As[1:]  # ... C) remove the first row
-        height = len(As)  # D)
+        # find the sub-matrix ...
+        a_s = copy.copy(a)  # B) make a copy, and ...
+        a_s = a_s[1:]  # ... C) remove the first row
+        height = len(a_s)  # D)
 
         for i in range(height):
-            # E) for each remaining row of submatrix ...
+            # E) for each remaining row of sub-matrix ...
             #     remove the focus column elements
-            As[i] = As[i][0:fc] + As[i][fc + 1:]
+            a_s[i] = a_s[i][0:fc] + a_s[i][fc + 1:]
 
         sign = (-1) ** (fc % 2)  # F)
-        # G) pass submatrix recursively
-        sub_det = det(As)
+        # G) pass sub-matrix recursively
+        sub_det = det(a_s)
         # H) total all returns from recursion
-        total += sign * A[0][fc] * sub_det
+        total += sign * a[0][fc] * sub_det
 
     return total
 
 
-def compare(name, npfunc, pyfunc, args):
+def matrix_minor(a: PythonMatrix, i: int, j: int) -> PythonMatrix:
+    return [row[:j] + row[j+1:] for row in (a[:i] + a[i+1:])]
+
+
+def inv(a: PythonMatrix) -> PythonMatrix:
+    determinant = det(a)
+    if len(a) == 2:
+        return [[a[1][1] / determinant, -1 * a[0][1] / determinant],
+                [-1 * a[1][0] / determinant, a[0][0] / determinant]]
+    cfs = []
+    for r in range(len(a)):
+        cf_row = []
+        for c in range(len(a)):
+            minor = matrix_minor(a, r, c)
+            cf_row.append(((-1) ** (r + c)) * det(minor))
+        cfs.append(cf_row)
+    cfs = transpose(cfs)
+    for r in range(len(cfs)):
+        for c in range(len(cfs)):
+            cfs[r][c] = cfs[r][c] / determinant
+    return cfs
+
+
+def compare(name: str, numpy_func: Callable, python_func: Callable, args: tuple) -> None:
     print(f'{name} =====================')
-    nres = npfunc(*(np.array(a) for a in args))
-    pres = pyfunc(*args)
+    numpy_result = numpy_func(*(np.array(a) for a in args))
+    python_result = python_func(*args)
     print('Numpy:')
-    print(nres)
+    print(numpy_result)
     print('Python:')
-    printm(pres)
-    print(f'Match = {np.array_equal(nres, pres)}\n')
+    print_result(python_result)
+    print(f'Match = {np.allclose(numpy_result, python_result)}\n')
 
 
 def main() -> None:
@@ -133,8 +161,11 @@ def main() -> None:
     a = [[1, 2], [3, 4], [5, 6]]
     compare('TRACE', np.trace, trace, args=(a,))
 
-    a = [[2, 2, 1, 10], [1, 3, 1, 122], [1, 2, 2, 10], [1,1, 11,111]]
+    a = [[2, 2, 1, 10], [1, 3, 1, 122], [1, 2, 2, 10], [1, 1, 11, 111]]
     compare('DET', np.linalg.det, det, args=(a,))
+
+    a = [[2, 2, 1, 10], [1, 3, 1, 122], [1, 2, 2, 10], [1, 1, 11, 111]]
+    compare('INV', np.linalg.inv, inv, args=(a,))
 
 
 if __name__ == '__main__':

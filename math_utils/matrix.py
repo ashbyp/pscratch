@@ -136,6 +136,10 @@ def compare(name: str, numpy_func: Callable, python_func: Callable, args: tuple)
     print(f'Match = {np.allclose(numpy_result, python_result)}\n')
 
 
+def eigvals(a: PythonMatrix) -> PythonMatrix:
+    return a
+
+
 def main() -> None:
     a = [[1, 2, 3], [4, 5, 6]]
     b = [[7, 8], [9, 10], [11, 12]]

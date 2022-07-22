@@ -20,3 +20,4 @@ def dfs(visited, graph, node):
 
 # Driver Code
 dfs(visited, graph, 'A')
+print(visited)

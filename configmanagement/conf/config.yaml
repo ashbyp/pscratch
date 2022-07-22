@@ -1,0 +1,12 @@
+defaults:
+   - _self_
+   - env: dev
+
+params:
+    a: 10
+    b: 11.1
+    c: hello
+
+files:
+    data: data.txt
+    results: results.txt

@@ -1,0 +1,11 @@
+.idea
+venv
+__pycache__
+*.pyc
+private.txt
+outputs
+example.db
+*.downloaded
+basic.png
+isam
+

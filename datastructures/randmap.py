@@ -1,8 +1,6 @@
 import threading
 
-
 class Randmap:
-
     def __init__(self):
         self.d = {}
         self.l = []

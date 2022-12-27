@@ -1,5 +1,5 @@
 from tictactoe import utils
-from player import Player
+from tictactoe.player import Player
 
 
 class Game:

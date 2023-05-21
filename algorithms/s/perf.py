@@ -1,6 +1,14 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
+# Default allocation parameters
+SHORT_ALLOC = 0.5
+LONG_ALLOC = 0.5
+NUM_LONG = 1
+NUM_SHORT = 1
+
+DEBUG = True
+
 
 def load_prices(filename: str) -> pd.DataFrame:
     # this converts input data to a timeseries
@@ -8,13 +16,17 @@ def load_prices(filename: str) -> pd.DataFrame:
     prices['date'] = pd.to_datetime(prices['date'])
     prices.set_index('date', inplace=True)
 
-    # debug, can remove
-    prices.to_csv("stocks_cleaned.csv")
+    if DEBUG:
+        prices.to_csv("stocks_cleaned.csv")
     return prices
 
 
-def determine_positions(weekly_returns: pd.DataFrame) -> pd.DataFrame:
-
+def determine_positions(weekly_returns: pd.DataFrame,
+                        long_alloc: float = LONG_ALLOC,
+                        short_alloc: float = SHORT_ALLOC,
+                        num_longs: int = NUM_LONG,
+                        num_short: int = NUM_SHORT
+                        ) -> pd.DataFrame:
     # Create empty dataframe to hold positions
     positions = pd.DataFrame(index=weekly_returns.index, columns=weekly_returns.columns)
 
@@ -23,17 +35,48 @@ def determine_positions(weekly_returns: pd.DataFrame) -> pd.DataFrame:
         week = weekly_returns.iloc[i]
 
         # Find the best and worst performing stocks
-        best = week.idxmax()
-        worst = week.idxmin()
+        best_stocks = week.nlargest(num_longs)
+        worst_stocks = week.nsmallest(num_short)
 
-        # Use a position size of 1 (you could play around with position sizes to improve the algo, maybe size
-        # could depend on the magnitude of the return)
-        positions.loc[weekly_returns.index[i], best] = 0.5
-        positions.loc[weekly_returns.index[i], worst] = -0.5
+        for best in best_stocks.index:
+            positions.loc[weekly_returns.index[i], best] = long_alloc
+        for worst in worst_stocks.index:
+            positions.loc[weekly_returns.index[i], worst] = -short_alloc
 
-    # debug, can remove
-    positions.to_csv("positions.csv")
     return positions
+
+
+def backtest(weekly_returns: pd.DataFrame,
+             strategy_name: str,
+             long_alloc: float,
+             short_alloc: float,
+             num_longs: int,
+             num_short: int) -> pd.DataFrame:
+
+    positions = determine_positions(weekly_returns, long_alloc, short_alloc, num_longs, num_short)
+
+    if DEBUG:
+        positions.to_csv(f"{strategy_name}_positions.csv")
+
+    # multiply weekly return by our position to get portfolio return (shift effectively moves positions to next
+    # week which simulates holding for a week)
+    portfolio_returns = (positions.shift() * weekly_returns).sum(axis=1)
+
+    if DEBUG:
+        portfolio_returns.to_csv(f"{strategy_name}_portfolio_returns.csv")
+
+    # Finally calculate the cumulative performance of the strategy
+    cumulative_performance = (1 + portfolio_returns).cumprod()
+
+    if DEBUG:
+        cumulative_performance.to_csv(f"{strategy_name}_cumulative_performance.csv")
+
+    return cumulative_performance
+
+
+def plot(df: pd.DataFrame, label: str) -> None:
+    plt.plot(df, label=label)
+    plt.legend()
 
 
 def main():
@@ -43,25 +86,25 @@ def main():
     weekly_returns = prices.resample('W').last().pct_change()
 
     # debug, can remove
-    weekly_returns.to_csv("weekly_returns.csv")
+    if DEBUG:
+        weekly_returns.to_csv("weekly_returns.csv")
 
-    positions = determine_positions(weekly_returns)
+    perf = backtest(weekly_returns, "one stock", LONG_ALLOC, SHORT_ALLOC, NUM_LONG, NUM_SHORT)
+    print(perf)
+    plot(perf, "one stock")
 
-    # multiply weekly return by our position to get portfolio return (shift effectively moves positions to next
-    # week which simulates holding for a week)
-    portfolio_returns = (positions.shift() * weekly_returns).sum(axis=1)
+    perf = backtest(weekly_returns, "two stocks", LONG_ALLOC, SHORT_ALLOC, 2, 2)
+    print(perf)
+    plot(perf, "two stocks")
 
-    # debug, can remove
-    portfolio_returns.to_csv("portfolio_returns.csv")
+    perf = backtest(weekly_returns, "long bias", 0.8, 0.2, NUM_LONG, NUM_SHORT)
+    print(perf)
+    plot(perf, "long bias")
 
-    # Finally calculate the cumulative performance of the strategy
-    cumulative_performance = (1 + portfolio_returns).cumprod()
+    perf = backtest(weekly_returns, "short bias", 0.2, 0.8, NUM_LONG, NUM_SHORT)
+    print(perf)
+    plot(perf, "short bias")
 
-    # Output the weekly cumulative performance
-    print(cumulative_performance)
-
-    # uncomment to plot
-    plt.plot(cumulative_performance)
     plt.show()
 
 

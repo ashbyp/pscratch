@@ -15,7 +15,7 @@ def timefunc(name: str = None, repeat: int = 0):
                 return ret
             finally:
                 elapsed = timeit.default_timer() - start
-                print(f'Function:{name or "unknown"} elapsed seconds {elapsed} runs={repeat + 1:,d}')
+                print(f'Function:{name or "unknown"} elapsed seconds {elapsed:.10f} runs={repeat + 1:,d}')
 
         return _time_it
 
@@ -105,6 +105,7 @@ class checker:
                 print(f'{self.results.count(False)} tests FAILED')
 
 
+@timefunc()
 def test_fun(l, b):
     return [x + 1 for x in l] + [b]
 

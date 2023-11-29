@@ -10,12 +10,8 @@ def solution(A):
                 break_cost = base_cost + A[j]
                 if not min_cost or break_cost < min_cost:
                     min_cost = break_cost
+
     return min_cost
-
-def soltion1():
-    pass
-
-
 
 # Example usage:
 A = [5, 2, 4, 6, 3, 7]

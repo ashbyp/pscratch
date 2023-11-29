@@ -33,27 +33,34 @@ def fib_dp(n: int) -> int:
 
 
 if __name__ == '__main__':
-    print(fib(5))
-
+    # print(fib(5))
 
     with timeblock('recur'):
-        print(fib(1))
-        print(fib(2))
-        print(fib(3))
-        print(fib(4))
-        print(fib(35))
-
+        print(fib(50))
     with timeblock('iter'):
-        print(fibi(1))
-        print(fibi(2))
-        print(fibi(3))
-        print(fibi(4))
-        print(fibi(35))
-
+        print(fibi(50))
     with timeblock('dp'):
-        print(fib_dp(1))
-        print(fib_dp(2))
-        print(fib_dp(3))
-        print(fib_dp(4))
-        print(fib_dp(35))
+        print(fib_dp(50))
+
+    #
+    # with timeblock('recur'):
+    #     print(fib(1))
+    #     print(fib(2))
+    #     print(fib(3))
+    #     print(fib(4))
+    #     print(fib(35))
+    #
+    # with timeblock('iter'):
+    #     print(fibi(1))
+    #     print(fibi(2))
+    #     print(fibi(3))
+    #     print(fibi(4))
+    #     print(fibi(35))
+    #
+    # with timeblock('dp'):
+    #     print(fib_dp(1))
+    #     print(fib_dp(2))
+    #     print(fib_dp(3))
+    #     print(fib_dp(4))
+    #     print(fib_dp(35))
 

@@ -43,11 +43,6 @@ def solution3(A):
     tally = {}
     for a in A:
         tally[a] = tally.get(a, 0) + 1
-        #
-        # if a not in tally:
-        #     tally[a] = 1
-        # else:
-        #     tally[a] += 1
     for a in A:
         if tally[a] == 1:
             return a

@@ -16,14 +16,23 @@ def printl(l: ListNode) -> None:
 
 
 def make(l: list[int]) -> ListNode | None:
-    head = ListNode()
-    curr = head
-
-    for val in l:
-        curr.next = ListNode(val)
+    if not l:
+        return None
+    root = ListNode(l[0], None)
+    curr = root
+    for i in l[1:]:
+        curr.next = ListNode(i, None)
         curr = curr.next
+    return root
 
-    return head.next
+    # head = ListNode()
+    # curr = head
+    #
+    # for val in l:
+    #     curr.next = ListNode(val)
+    #     curr = curr.next
+    #
+    # return head.next
 
 
 def unmake(ln: ListNode | None) -> list[int]:

@@ -3,7 +3,7 @@
 def find_anagrams(words: list[str]) -> list[str]:
     tally = {}
     for word in words:
-        key = ''.join(sorted(word.lower()))
+        key = str(sorted(word.lower()))
         if key not in tally:
             tally[key] = [word]
         else:

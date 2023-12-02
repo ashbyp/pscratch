@@ -17,29 +17,38 @@ def solution(buckets_str: str) -> int:
     for i in range(0, len_buckets - sequence_length + 1):
         positions = set([pos for pos in range(i, i + sequence_length + 1, 2)])
         moves = len(starting_positions_set.difference(positions))
+        if moves == 0:
+            return 0
         min_moves = min(min_moves, moves)
 
     return min_moves
 
 
+def main():
+    buckets = "B.B.BB..B"
+    result = solution(buckets)
+    print(result)
 
-# Example usage:
-buckets = "B.B.BB..B"
-result = solution(buckets)
-print(result)
+    buckets = "B....B"
+    result = solution(buckets)
+    print(result)
 
-buckets = "B....B"
-result = solution(buckets)
-print(result)
+    buckets = "BB........BB"
+    result = solution(buckets)
+    print(result)
 
-buckets = "BB........BB"
-result = solution(buckets)
-print(result)
+    buckets = "BBBB..."
+    result = solution(buckets)
+    print(result)
 
-buckets = "BBBB..."
-result = solution(buckets)
-print(result)
+    buckets = "BBBBB.."
+    result = solution(buckets)
+    print(result)
 
-buckets = "BBBBB.."
-result = solution(buckets)
-print(result)
+    buckets = "BB."
+    result = solution(buckets)
+    print(result)
+
+
+if __name__ == '__main__':
+    main()

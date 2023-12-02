@@ -2,15 +2,13 @@ from utils.measure import checker
 
 
 def solution(A):
-    min_cost = None
+    min_cost = float('inf')
     for i, cost in enumerate(A[1:], start=1):
-        base_cost = A[i]
-        if not min_cost or (min_cost > base_cost):
+        base_cost = cost
+        if min_cost > base_cost:
             for j in range(i+2, len(A) - 1):
                 break_cost = base_cost + A[j]
-                if not min_cost or break_cost < min_cost:
-                    min_cost = break_cost
-
+                min_cost = min(min_cost, break_cost)
     return min_cost
 
 # Example usage:

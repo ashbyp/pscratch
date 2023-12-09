@@ -203,11 +203,11 @@ data="""13 23 46 97 206 436 919 1924 3971 8016 15765 30243 56875 105604 195153 3
 0 -8 -12 4 69 236 599 1312 2617 4909 8893 15917 28592 51831 94450 171471 307246 539478 924146 1541242 2501095
 10 10 16 32 62 110 180 276 402 562 760 1000 1286 1622 2012 2460 2970 3546 4192 4912 5710"""
 
-# data="""10 13 16 21 30 45"""
-#
-# data="""0 3 6 9 12 15
-# 1 3 6 10 15 21
-# 10 13 16 21 30 45"""
+#data="""10 13 16 21 30 45"""
+# #
+# # data="""0 3 6 9 12 15
+# # 1 3 6 10 15 21
+# # 10 13 16 21 30 45"""
 
 
 
@@ -219,13 +219,38 @@ for line in data.splitlines():
         nums = [nums[i] - nums[i-1] for i in range(1, len(nums))]
         result.append(nums)
     n = 0
-    for row in range(len(result) - 2, -1, -1):
-        n = result[row][0] - n
+    for row in range(0, len(result) - 1):
+        n = result[row][-1] + n
+    # for row in range(len(result) - 2, -1, -1):
+    #     n = result[row][0] - n
 
     total += n
 
 print(total)
 
+D = data
+L = D.split('\n')
+numbers = [[*map(int, line.split())] for line in L]
+
+def f(xs):
+  part2=False
+  if all(x==0 for x in xs):
+    return 0
+  D = []
+  for i in range(len(xs)-1):
+    D.append(xs[i+1]-xs[i])
+  return xs[0 if part2 else -1] + (-1 if part2 else 1)*f(D)
+
+
+def predict(nums):
+    diffs = [b-a for a,b in zip(nums,nums[1:])]
+    return nums[-1] + (predict(diffs) if any(diffs) else 0)
+
+print('part 1:', sum(map(predict,numbers)))
+print('part 2:', sum(predict(num[::-1]) for num in numbers))
+
+print('part 1:', sum(map(f,numbers)))
+print('part 2:', sum(f(num[::-1]) for num in numbers))
 
 
 

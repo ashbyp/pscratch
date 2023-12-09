@@ -12,4 +12,4 @@ def count_ones_less_than(n):
 
 
 if __name__ == '__main__':
-    print(count_ones_less_than(100000))
+    print(count_ones_less_than(12))

@@ -1,4 +1,7 @@
-data="""O...#.O......#...##....O#.#.OO...O.#OO#.....#O.O.....#......#.OO...O...O..O#O#....#...O..O...O.....O
+import timeit
+from functools import cache
+
+data = """O...#.O......#...##....O#.#.OO...O.#OO#.....#O.O.....#......#.OO...O...O..O#O#....#...O..O...O.....O
 .OO......O.OO.O.#.#O.O...#.##OO.....#.#O#...OOOOO..##O#O..O#O.##O...#O....O#.#.OO....#.........O.O.O
 ......O.O.O.....O.#.#.#OO#O#.O...O.#.......#O....#.O.#....OOO...#....O#O.......#......O...O##...O...
 O...##O..#....OO.OO....O...O...O#..##.OOO..O..#OO....###....OO.O.O...........O...O..O.....#.#..O.O#.
@@ -99,7 +102,7 @@ O#O..OO.O....OO.#O......O......#...#.....O.#OO.#.....OO..O#.O..O.O...#....O.O..O
 .....#................OO..OOOO..#.....O.###O.O...O..#O..........OO.#...OO.O#...O......O..OOOO.#..###
 O.....O...#O.#..........#O......O..OOO#....O.OOOO....O..#..#O....O.....O#..O..#.O.O....#OO.#....#O.."""
 
-data="""O....#....
+tdata = """O....#....
 O.OO#....#
 .....##...
 OO.#O....O
@@ -110,6 +113,8 @@ O.#..O.#.#
 #....###..
 #OO..#...."""
 
+import numpy as np
+
 
 def pr(g, name, debug=False):
     if debug:
@@ -118,48 +123,59 @@ def pr(g, name, debug=False):
             print(f'{i}\t{row}')
 
 
+@cache
 def transpose(g):
-    transposed_matrix = [list(row) for row in zip(*g)]
+    transposed_matrix = tuple(tuple(row) for row in zip(*g))
     return transposed_matrix
 
 
+@cache
 def rotate_90_degrees(matrix):
-    transposed_matrix = [list(row) for row in zip(*matrix)]
-    rotated_matrix = [row[::-1] for row in transposed_matrix]
+    transposed_matrix = tuple([tuple(list(row)) for row in zip(*matrix)])
+    rotated_matrix = tuple([row[::-1] for row in transposed_matrix])
     return rotated_matrix
+    # return matrix
 
 
+@cache
 def rotate_90_degrees_counterclockwise(matrix):
     reversed_rows_matrix = [row[::-1] for row in matrix]
     rotated_matrix = [list(row) for row in zip(*reversed_rows_matrix)]
     return rotated_matrix
 
+
+@cache
 def flip_vertical(matrix):
     return matrix[::-1]
 
+
+@cache
 def to_strings(g):
     s = []
     for row in g:
         s.append(''.join(row))
-    return s
+    return tuple(s)
 
 
+@cache
 def from_strings(g):
     f = []
     for row in g:
-        f.append(list(row))
-    return f
+        f.append(tuple(row))
+    return tuple(f)
 
 
+@cache
 def mangle(g):
     jj = []
     for row in g:
         splat = row.split('#')
         shuf = [''.join(sorted(s, reverse=True)) for s in splat]
         jj.append('#'.join(shuf))
-    return jj
+    return tuple(jj)
 
 
+@cache
 def load(g):
     tot = 0
     n_rows, n_cols = len(g), len(g[0])
@@ -169,63 +185,48 @@ def load(g):
                 tot += n_rows - row
     return tot
 
+
+@cache
 def tilt(g):
-    # pr(g, 'Start')
-    t = transpose(g)
-    # pr(t, 'Transposed')
-    s = to_strings(t)
-    # pr(s, 'Strings')
-    m = mangle(s)
-    # pr(m, 'Mangled')
-    f = from_strings(m)
-    # pr(f, 'Grid')
-    t = transpose(f)
-    # pr(t, 'Transposed')
-    return t
+    g = transpose(g)
+    g = to_strings(g)
+    g = mangle(g)
+    g = from_strings(g)
+    g = transpose(g)
+    return g
 
 
 def part1():
-    g = list(map(list, data.splitlines()))
+    g = tuple(data.splitlines())
     print(load(tilt(g)))
 
 
+@cache
+def five_hundred_cycles(g):
+    for i in range(500):
+        g = tilt(g)
+        g = rotate_90_degrees(g)
+        g = tilt(g)
+        g = rotate_90_degrees(g)
+        g = tilt(g)
+        g = rotate_90_degrees(g)
+        g = tilt(g)
+        g = rotate_90_degrees(g)
+    return g
+
+
 def part2():
-    g = list(map(list, data.splitlines()))
-    for i in range(1000000000):
-        if i % 10000 == 0: print('.', end='')
-        # pr(g, 'Start', True)
-
-        g = tilt(g)
-        # pr(g, 'North', True)
-
-        g = rotate_90_degrees(g)
-        g = tilt(g)
-        g = rotate_90_degrees_counterclockwise(g)
-        # pr(g, 'West', True)
-
-
-        g = flip_vertical(g)
-        g = tilt(g)
-        g = flip_vertical(g)
-        # pr(g, 'South', True)
-
-        g = rotate_90_degrees_counterclockwise(g)
-        g = tilt(g)
-        g = rotate_90_degrees(g)
-        # pr(g, 'East', True)
-
+    g = tuple(data.splitlines())
+    t = timeit.default_timer()
+    for i in range(1_000_000_000 // 500):
+        if i % 100_000 == 0:
+            print(f'{i * 500:,} {timeit.default_timer() - t}', end='\n')
+            t = timeit.default_timer()
+        g = five_hundred_cycles(g)
     print()
     print(load(g))
 
 
 if __name__ == '__main__':
-    part1() # 136.
+    part1()  # 136.
     part2()
-
-
-
-
-
-
-
-

@@ -65,8 +65,8 @@ def shine_beam(grid, start_pos):
 
         illuminated.add(pos)
         obstacle = grid[pos[0]][pos[1]]
-
         directions = OBSTACLE_MAP[obstacle]
+
         for direction in directions[pos[2]]:
             move = MOVE_MAP[direction]
             queue.append((pos[0] + move[0], pos[1] + move[1], direction))

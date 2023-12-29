@@ -1010,15 +1010,13 @@ def part2():
     from collections import Counter
     for line in data.splitlines():
         bef, pword = line.split(':')
-        pword = list(pword.strip())
+        pword = pword.strip()
         num_range, letter = bef.split(' ')
         pos1, pos2 = num_range.split('-')
         pos1 = int(pos1)
         pos2 = int(pos2)
-
-        if pword[pos1-1] == letter or pword[pos2-1] == letter:
-            if pword[pos1-1] != pword[pos2-1]:
-                valid += 1
+        if (pword[pos1-1] == letter) != (pword[pos2-1] == letter):
+            valid += 1
 
     print(valid)
 

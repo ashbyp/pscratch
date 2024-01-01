@@ -3,11 +3,11 @@ pdata = """"""
 tdata = """"""
 
 
-def part2(data):
+def part2(data: str):
     pass
 
 
-def part1(data):
+def part1(data: str):
     pass
 
 

@@ -1,22 +1,4 @@
-# It contains at least three vowels (aeiou only), like aei, xazegov, or
-# aeiouaeiouaeiou.
-# It contains at least one letter that appears twice in a row, like xx, abcdde (dd),
-# or
-# aabbccdd (aa, bb, cc, or dd).
-# It does not contain the strings ab, cd, pq, or xy, even if they are part of one of
-# the other requirements.
-
-vowels = set(['a', 'e', 'i', 'o', 'u'])
-bad = ('ab','cd', 'pq', 'xy')
-
-
-data = """ugknbfddgicrmopn
-aaa
-jchzalrnumimnmhp
-haegwjzuvuyypxyu
-dvszwmarrgswjxmb"""
-
-data="""rthkunfaakmwmush
+pdata = """rthkunfaakmwmush
 qxlnvjguikqcyfzt
 sleaoasjspnjctqt
 lactpmehuhmzwfjl
@@ -1017,32 +999,86 @@ mfifrjamczjncuym
 otmgvsykuuxrluky
 oiuroieurpyejuvm"""
 
-def nice(word):
-    print(word)
+tdata = """ugknbfddgicrmopn
+aaa
+jchzalrnumimnmhp
+haegwjzuvuyypxyu
+dvszwmarrgswjxmb"""
 
-    for b in bad:
-        if b in word:
-            print('  bad')
-            return False
-    v = 0
-    con = False
+
+def has_pair(word):
     for i, w in enumerate(word):
-        if w in vowels:
-            v += 1
-        if i < len(word) - 1:
-            if word[i] == word[i+1]:
-                con = True
+        pair = word[i:i + 2]
+        rest = word[i + 2:]
+        if pair in rest:
+            return True
+    return False
 
-    if v < 3:
-        # print('  vow')
-        return False
 
-    if not con:
-        # print('  con')
-        return False
-    return True
+def has_repeat(word):
+    last1 = word[1]
+    last2 = word[0]
+    for w in word[2:]:
+        if w == last2:
+            return True
+        last2 = last1
+        last1 = w
+    return False
 
-tot = 0
-for word in data.splitlines():
-    if nice(word): tot += 1
-print(tot)
+
+def part2(data: str):
+    """
+    It contains a pair of any two letters that appears at
+    least twice in the string without overlapping, like xyxy (xy) or aabcdefgaa
+    (aa), but not like aaa (aa, but it overlaps).
+    It contains at least one letter which repeats with exactly one letter between them,
+    like xyx, abcdefeghi (efe), or even aaa.
+    """
+    nice = 0
+    for word in data.splitlines():
+        if has_pair(word) and has_repeat(word):
+            nice += 1
+    print(nice)
+
+
+def part1(data: str):
+    nice = 0
+    for word in data.splitlines():
+        vowels = 0
+        last = None
+        doub = False
+        prohib = False
+
+        for w in word:
+            if w in ('a', 'e', 'i', 'o', 'u'):
+                vowels += 1
+            if last and w == last:
+                doub = True
+            if last and last + w in ('ab', 'cd', 'pq', 'xy'):
+                prohib = True
+
+            last = w
+
+        if vowels > 2 and doub and not prohib:
+            nice += 1
+    print(nice)
+
+
+if __name__ == '__main__':
+    def run(m, d, f):
+        if d:
+            print(f'{m:15} ------------')
+            f(d)
+            print()
+
+
+    # print(has_pair('abab'))
+    # print(has_pair('aaggbbbbff'))
+    # print(has_pair('qjhvhtzxzqqjkmpb'))
+    # print(has_pair('uurcxstgmygtbstg'))
+    # print(has_pair('ieodomkazucvgmuy'))
+
+    run("Part 1 test", tdata, part1)
+    run("Part 1 puzzle", pdata, part1)
+    run("Part 2 test", tdata, part2)
+    run("Part 2 puzzle", pdata, part2)

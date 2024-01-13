@@ -59,26 +59,14 @@ tdata = """1, 1
 
 def part2(data: str, debug=False):
     limit = 32 if data == tdata else 10000
-
-    from collections import Counter
     points = []
     for line in data.splitlines():
         points.append(tuple(map(int, line.split(','))))
-    print(points)
+
     min_x = min(p[0] for p in points)
     max_x = max(p[0] for p in points)
     min_y = min(p[1] for p in points)
     max_y = max(p[1] for p in points)
-
-    print(min_x, max_x, min_y, max_y)
-
-    res = [[None for _ in range(max_y + 1)] for _ in range(max_x + 2)]
-
-    if debug:
-        for y in range(max_y + 1):
-            for x in range(max_x + 2):
-                print((x, y), ' ', end='')
-            print()
 
     size = 0
 
@@ -86,9 +74,6 @@ def part2(data: str, debug=False):
         for x in range(min_x, max_x + 2):
             pt = (x, y)
             sum_man_dist = sum([m_dist(pt, p)[0] for p in points])
-            if debug:
-                print(pt)
-                print('  Sum dists', sum_man_dist)
             if sum_man_dist < limit:
                 size += 1
 

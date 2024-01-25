@@ -109,8 +109,31 @@ Step F must be finished before step E can begin."""
 
 
 def part2(data: str, debug: bool = False):
-    # on desk at work
-    pass
+    from collections import defaultdict
+    graph = defaultdict(list)
+    all_nodes = set()
+    for line in data.splitlines():
+        line = line.split()
+        bef, aft = line[1], line[7]
+        graph[aft].append(bef)
+        all_nodes.add(bef)
+        all_nodes.add(aft)
+    poss = list(set(all_nodes).difference(graph.keys()))
+
+    res = ''
+    while poss:
+        poss = sorted(poss)
+        cur = poss[0]
+        res += cur
+        poss.remove(cur)
+        for node, prereqs in graph.items():
+            if prereqs:
+                if cur in prereqs:
+                    prereqs.remove(cur)
+                if len(prereqs) == 0 and node not in poss:
+                    poss.append(node)
+
+    print(res)
 
 
 def part1(data: str, debug: bool = False):

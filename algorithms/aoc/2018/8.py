@@ -4,7 +4,20 @@ tdata = """2 3 0 3 10 11 12 1 1 0 1 99 2 1 1 2"""
 
 
 def part2(data: str, debug: bool = False):
-    pass
+    all_metas = []
+    nums = list(map(int, data.split()))
+
+    def read_node(idx):
+        children, meta = nums[idx], nums[idx + 1]
+        idx += 2
+        for i in range(children):
+            idx = read_node(idx)
+        for i in range(meta):
+            all_metas.append(nums[idx + i])
+        return idx + meta
+
+    read_node(0)
+    print(sum(all_metas))
 
 
 def part1(data: str, debug: bool = False):

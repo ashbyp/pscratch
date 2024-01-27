@@ -1,3 +1,5 @@
+from utils.measure import timefunc
+
 pdata = """jmp +265
 jmp +326
 acc +41

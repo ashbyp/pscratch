@@ -15,7 +15,7 @@ def main():
     import timeit
 
     def run(msg, data, fn, debug):
-        if data or True:
+        if data:
             print(f'*** {msg:13} ---------------')
             start = timeit.default_timer()
             fn(data, debug)

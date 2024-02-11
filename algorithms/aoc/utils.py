@@ -1,4 +1,6 @@
 import os
+import webbrowser
+
 import requests
 
 
@@ -27,6 +29,18 @@ def read_file(filename):
         return None
 
 
+def download_instructions(year: int, day: int) -> str:
+    url = f'https://adventofcode.com/{year}/day/{day}'
+    data = download_webpage(url)
+    return data
+
+
+def launch_chrome(year: int, day: int) -> str:
+    url = f'https://adventofcode.com/{year}/day/{day}'
+    chrome_path = 'C:/Program Files/Google/Chrome/Application/chrome.exe %s'
+    webbrowser.get(chrome_path).open(url)
+
+
 def download_webpage(url):
     try:
         response = requests.get(url)
@@ -44,6 +58,7 @@ def write_file(text, filename):
         print(f"Webpage content saved to {filename}")
     except IOError as e:
         print(f"Error saving the content to file: {e}")
+
 
 if __name__ == '__main__':
     print(download_webpage('https://adventofcode.com/2018/day/1/input'))

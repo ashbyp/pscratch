@@ -39,6 +39,7 @@ def launch_chrome(year: int, day: int) -> str:
     url = f'https://adventofcode.com/{year}/day/{day}'
     chrome_path = 'C:/Program Files/Google/Chrome/Application/chrome.exe %s'
     webbrowser.get(chrome_path).open(url)
+    print(f'Launched: {url}')
 
 
 def download_webpage(url):

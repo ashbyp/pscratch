@@ -42,7 +42,7 @@ def aoc_url(year: int, day: int) -> str:
 def launch_chrome(year: int, day: int, data) -> None:
     url = aoc_url(year, day)
     chrome_path = 'C:/Program Files/Google/Chrome/Application/chrome.exe %s'
-    webbrowser.get(chrome_path).open(url + "/input" if data else "")
+    webbrowser.get(chrome_path).open(url + ("/input" if data else ""))
     print(f'Launched: {url}')
 
 
@@ -60,7 +60,6 @@ def write_file(text, filename):
     try:
         with open(filename, 'w', encoding='utf-8') as file:
             file.write(text)
-        print(f"Webpage content saved to {filename}")
     except IOError as e:
         print(f"Error saving the content to file: {e}")
 

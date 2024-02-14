@@ -3,9 +3,9 @@ import random
 import re
 from collections import namedtuple
 
-from algorithms.aoc.utils import launch_chrome, aoc_url
+from algorithms.aoc.utils import launch_chrome, aoc_url, read_file, write_file
 
-Puzzle = namedtuple('Date', ['year', 'day'])
+Puzzle = namedtuple('Puzzle', ['year', 'day'])
 
 
 def it() -> Puzzle:
@@ -15,6 +15,13 @@ def it() -> Puzzle:
             complete = {int(f.replace('.py', '')) for f in os.listdir(name) if re.match(r'\d{1,2}\.py', f)}
             for t in all_puzzles.difference(complete):
                 yield Puzzle(year=int(name), day=t)
+
+
+def create_file(suggest: Puzzle):
+    print(f'Creating: {suggest.year}/{suggest.day}.py')
+    write_file(
+        read_file('template.py').replace("<<URL>>", aoc_url(suggest.year, suggest.day)),
+        f'{suggest.year}/{suggest.day}.py')
 
 
 def suggest_puzzle(max_day=25, exclude_years=None) -> None:
@@ -33,14 +40,7 @@ def suggest_puzzle(max_day=25, exclude_years=None) -> None:
             print('** invalid')
 
     if create:
-        print(f'Creating: {suggest.year}/{suggest.day}.py')
-
-        with open('template.py', 'r') as f:
-            data = f.read()
-            data = data.replace("<<URL>>", aoc_url(suggest.year, suggest.day))
-            with open (f'{suggest.year}/{suggest.day}.py', 'w') as f1:
-                f1.write(data)
-
+        create_file(suggest)
         launch_chrome(suggest.year, suggest.day, data=False)
 
 

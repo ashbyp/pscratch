@@ -1,4 +1,5 @@
-url = "<<URL>>"
+question = "<<URL>>"
+input_data = "<<URL>>/input"
 
 pdata = """"""
 

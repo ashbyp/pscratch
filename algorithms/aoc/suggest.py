@@ -1,10 +1,9 @@
 import os
 import random
 import re
-import shutil
 from collections import namedtuple
 
-from algorithms.aoc.utils import launch_chrome
+from algorithms.aoc.utils import launch_chrome, aoc_url
 
 Puzzle = namedtuple('Date', ['year', 'day'])
 
@@ -35,8 +34,14 @@ def suggest_puzzle(max_day=25, exclude_years=None) -> None:
 
     if create:
         print(f'Creating: {suggest.year}/{suggest.day}.py')
-        shutil.copyfile('template.py', f'{suggest.year}/{suggest.day}.py')
-        launch_chrome(suggest.year, suggest.day)
+
+        with open('template.py', 'r') as f:
+            data = f.read()
+            data = data.replace("<<URL>>", aoc_url(suggest.year, suggest.day))
+            with open (f'{suggest.year}/{suggest.day}.py', 'w') as f1:
+                f1.write(data)
+
+        launch_chrome(suggest.year, suggest.day, data=False)
 
 
 def show_incomplete():

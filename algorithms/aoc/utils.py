@@ -35,10 +35,14 @@ def download_instructions(year: int, day: int) -> str:
     return data
 
 
-def launch_chrome(year: int, day: int) -> str:
-    url = f'https://adventofcode.com/{year}/day/{day}'
+def aoc_url(year: int, day: int) -> str:
+    return f'https://adventofcode.com/{year}/day/{day}'
+
+
+def launch_chrome(year: int, day: int, data) -> None:
+    url = aoc_url(year, day)
     chrome_path = 'C:/Program Files/Google/Chrome/Application/chrome.exe %s'
-    webbrowser.get(chrome_path).open(url)
+    webbrowser.get(chrome_path).open(url + "/input" if data else "")
     print(f'Launched: {url}')
 
 

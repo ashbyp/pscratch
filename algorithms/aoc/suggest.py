@@ -18,8 +18,8 @@ def it() -> Puzzle:
                 yield Puzzle(year=int(name), day=t)
 
 
-def suggest_puzzle(max_day=25) -> None:
-    suggest = random.choice([choice for choice in it() if choice.day <= max_day])
+def suggest_puzzle(max_day=25, exclude_years=None) -> None:
+    suggest = random.choice([choice for choice in it() if choice.day <= max_day and choice.year not in exclude_years])
     print('Suggestion')
     print(f'Year: {suggest.year} Day: {suggest.day}')
 
@@ -54,4 +54,4 @@ def show_incomplete():
 if __name__ == '__main__':
     show_incomplete()
     print()
-    suggest_puzzle(15)
+    suggest_puzzle(15, [2023])

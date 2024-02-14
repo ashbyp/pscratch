@@ -1,14 +1,14 @@
 import os
 import random
 import re
-from collections import namedtuple
+from collections import namedtuple, defaultdict
 
 from algorithms.aoc.utils import launch_chrome, aoc_url, read_file, write_file
 
 Puzzle = namedtuple('Puzzle', ['year', 'day'])
 
 
-def it() -> Puzzle:
+def not_completed() -> Puzzle:
     all_puzzles = set(range(1, 26))
     for name in os.listdir():
         if os.path.isdir(name) and re.match(r"\d{4}", name):
@@ -25,13 +25,14 @@ def create_file(suggest: Puzzle):
 
 
 def suggest_puzzle(max_day=25, exclude_years=None) -> None:
-    suggest = random.choice([choice for choice in it() if choice.day <= max_day and choice.year not in exclude_years])
+    suggest = random.choice(
+        [choice for choice in not_completed() if choice.day <= max_day and choice.year not in exclude_years])
     print('Suggestion')
     print(f'Year: {suggest.year} Day: {suggest.day}')
 
     create = None
     while create is None:
-        user_input = input('Create template? ([y]/n) ').strip().lower()
+        user_input = input(f'Create template? ([y]/n) {aoc_url(suggest.year, suggest.day)}').strip().lower()
         if user_input == 'n' or not user_input:
             create = False
         elif user_input == 'y':
@@ -45,15 +46,24 @@ def suggest_puzzle(max_day=25, exclude_years=None) -> None:
 
 
 def show_incomplete():
-    incomplete = sorted(it(), reverse=True)
-    cur = 0
-    for year, day in incomplete:
-        if year != cur:
-            print()
-            print(f'{year}:  ', end='')
-            cur = year
-        print(f' {day:2}', end='')
+    incomplete = defaultdict(list)
+    min_year = float('inf')
+    max_year = 0
+
+    for year, day in not_completed():
+        incomplete[year].append(day)
+        min_year = min(min_year, year)
+        max_year = max(max_year, year)
+
     print()
+    for year in range(min_year, max_year + 1):
+        print(f'{year}:  ', end='')
+        for day in range(1, 26):
+            if day in incomplete[year]:
+                print(f'   ', end='')
+            else:
+                print(f' {day:2}', end='')
+        print()
 
 
 if __name__ == '__main__':

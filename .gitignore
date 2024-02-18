@@ -9,3 +9,17 @@ example.db
 basic.png
 isam
 
+/algorithms/s/long bias_cumulative_performance.csv
+/algorithms/s/long bias_portfolio_returns.csv
+/algorithms/s/long bias_positions.csv
+/algorithms/s/one stock_cumulative_performance.csv
+/algorithms/s/one stock_portfolio_returns.csv
+/algorithms/s/one stock_positions.csv
+/algorithms/s/short bias_cumulative_performance.csv
+/algorithms/s/short bias_portfolio_returns.csv
+/algorithms/s/short bias_positions.csv
+/algorithms/s/stocks_cleaned.csv
+/algorithms/s/two stocks_cumulative_performance.csv
+/algorithms/s/two stocks_portfolio_returns.csv
+/algorithms/s/two stocks_positions.csv
+/algorithms/s/weekly_returns.csv

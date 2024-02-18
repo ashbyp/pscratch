@@ -47,7 +47,7 @@ def part2(data: str, debug: bool = False):
             coord = c
             best_size = sqsize
 
-    print(best, coord, best_size)
+    print(best, coord, best_size, 'add 1 to x and y')
 
 
 def part1(data: str, debug: bool = False):

@@ -50,10 +50,9 @@ def part2(data: str, debug: bool = False):
     graph = defaultdict(list)
     for line in data.splitlines():
         left, right = line.split('-')
-        graph[left].append(right)
-        if left == 'start' or right == 'end':
-            pass
-        else:
+        if not right == 'start':
+            graph[left].append(right)
+        if not left == 'start':
             graph[right].append(left)
     if debug:
         print(graph)
@@ -64,20 +63,14 @@ def part2(data: str, debug: bool = False):
         if path[-1] == 'end':
             paths.append(path)
             return
-        if debug:
-            # print('at node ', path[-1], ' trying ', graph[path[-1]])
-            pass
         for nex in graph[path[-1]]:
             if nex.isupper():
                 find(path + [nex], cond)
             else:
-                if nex == 'start':
-                    pass
-                elif nex not in path:
+                if nex not in path:
                     find(path + [nex], cond)
-                else:
-                    if not cond:
-                        find(path + [nex], True)
+                elif not cond:
+                    find(path + [nex], True)
 
     find(['start'], False)
 
@@ -104,15 +97,11 @@ def part1(data: str, debug: bool = False):
         if path[-1] == 'end':
             paths.append(path)
             return
-        if debug:
-            print('at node ', path[-1], ' trying ', graph[path[-1]])
 
         for nex in graph[path[-1]]:
-            if nex.isupper():
+            if nex.isupper() or nex not in path:
                 find(path + [nex])
-            else:
-                if nex not in path:
-                    find(path + [nex])
+
     find(['start'])
 
     if debug:
@@ -131,11 +120,10 @@ def main():
             fn(data, debug)
             elapsed_ms = (timeit.default_timer() - start) * 1000
             print(f'Time {elapsed_ms:.10f} ms ------------')
-            print()
 
-    run("Part 1 test", tdata, part1, True)
+    run("Part 1 test", tdata, part1, False)
     run("Part 1 puzzle", pdata, part1, False)
-    run("Part 2 test", tdata1, part2, True)
+    run("Part 2 test", tdata1, part2, False)
     run("Part 2 puzzle", pdata, part2, False)
 
 

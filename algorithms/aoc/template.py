@@ -24,7 +24,6 @@ def main():
             fn(data, debug)
             elapsed_ms = (timeit.default_timer() - start) * 1000
             print(f'Time {elapsed_ms:.10f} ms ------------')
-            print()
 
     run("Part 1 test", tdata, part1, True)
     run("Part 1 puzzle", pdata, part1, False)

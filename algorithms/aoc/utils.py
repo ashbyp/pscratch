@@ -39,10 +39,10 @@ def aoc_url(year: int, day: int) -> str:
     return f'https://adventofcode.com/{year}/day/{day}'
 
 
-def launch_chrome(year: int, day: int, data) -> None:
+def launch_chrome(year: int, day: int) -> None:
     url = aoc_url(year, day)
     chrome_path = 'C:/Program Files/Google/Chrome/Application/chrome.exe %s'
-    webbrowser.get(chrome_path).open(url + ("/input" if data else ""))
+    webbrowser.get(chrome_path).open(url)
     print(f'Launched: {url}')
 
 

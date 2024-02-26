@@ -42,7 +42,7 @@ def suggest_puzzle(max_day=25, exclude_years=None) -> None:
 
     if create:
         create_file(suggest)
-        launch_chrome(suggest.year, suggest.day, data=False)
+        launch_chrome(suggest.year, suggest.day)
 
 
 def show_incomplete():
@@ -71,4 +71,4 @@ if __name__ == '__main__':
     print()
     suggest_puzzle(15, [2023])
 
-    # create_file(Puzzle(2016, 15))
+    # create_file(Puzzle(2019, 10))

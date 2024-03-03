@@ -31,12 +31,12 @@ def part2(data: str, debug: bool = False):
     data = data.splitlines()
     _ = int(data[0])
     deps = list(enumerate([int(d) for d in data[1].split(',') if d != 'x']))
-    min_start = int(deps[0][1])
+    deps = sorted(deps, key=lambda x: x[1])
+    min_start = 1 # int(deps[0][1])
     if debug:
         print(deps)
 
-    ts = 0
-    valid = []
+    ts = 1# 99_999_999_998_556
     while True:
         if ts > 100000000000000 and ts % 1_000_000 == 0:
             print(ts)
@@ -59,10 +59,6 @@ def part2(data: str, debug: bool = False):
         if debug:
             print()
 
-        if len(valid) > num_valid and ts != 0:
-            num_valid = len(valid)
-            min_start = ts
-            print('min start is now', min_start)
         ts += min_start
 
     print('not found')

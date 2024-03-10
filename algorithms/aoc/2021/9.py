@@ -123,7 +123,7 @@ def part2(data: str, debug: bool = False):
                 return False
         return True
 
-    lows = [(r, c) for r in range(len(grid)) for c in range(len(grid[0])) if is_low(r, c)]
+    lows = [(r, c) for r in range(n_rows) for c in range(n_cols) if is_low(r, c)]
 
     if debug:
         print(lows)
@@ -131,28 +131,24 @@ def part2(data: str, debug: bool = False):
     sizes = []
 
     for r, c in lows:
-        basin = []
-        visited = set()
+        basin = set()
 
-        def find_basin(rr, cc, h):
+        def find_basin(rr, cc, h=None):
             if not ((0 <= rr <= n_rows - 1) and (0 <= cc <= n_cols - 1)):
                 return
-            if (rr, cc) in visited:
+            if (rr, cc) in basin:
                 return
-            if grid[rr][cc] != 9 and h < grid[rr][cc]:
-                basin.append((rr, cc))
+            if grid[rr][cc] != 9 and (h is None or h < grid[rr][cc]):
+                basin.add((rr, cc))
                 for dr, dc in ((-1, 0), (0, -1), (0, 1), (1, 0)):
                     find_basin(rr + dr, cc + dc, grid[rr][cc])
-                    visited.add((rr, cc))
 
-        find_basin(r, c, grid[r][c] - 1)  # very cheaty
+        find_basin(r, c)
         if debug:
             print(basin)
-
         sizes.append(len(basin))
 
     sizes = sorted(sizes, reverse=True)
-
     print('*', sizes[0] * sizes[1] * sizes[2])
 
 

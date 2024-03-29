@@ -41,4 +41,5 @@ def solution(A, B, K):
 
 
 if __name__ == '__main__':
+    print(solution_order_B_minus_A(6, 11, 2))
     print(solution(6, 11, 2))

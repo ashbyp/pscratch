@@ -4,54 +4,11 @@ from functools import cache
 @cache
 def get_win_lines(size: int) -> list[list[tuple[int, int]]]:
     all_lines = []
-
-    for row in range(size):
-        row_line = []
-        for col in range(size):
-            row_line.append((row, col))
-        all_lines.append(row_line)
-
-    for col in range(size):
-        col_line = []
-        for row in range(size):
-            col_line.append((row, col))
-        all_lines.append(col_line)
-
-    diagonal = []
-    for row_col in range(size):
-        diagonal.append((row_col, row_col))
-    all_lines.append(diagonal)
-
-    diagonal = []
-    for row_col in range(size):
-        diagonal.append((row_col, size - 1 - row_col))
-    all_lines.append(diagonal)
-
+    all_lines += [[(row, col) for col in range(size)] for row in range(size)]
+    all_lines += [[(col, row) for col in range(size)] for row in range(size)]
+    all_lines += [[(c, c) for c in range(size)]]
+    all_lines += [[(c, size - c) for c in range(size)]]
     return all_lines
-
-
-def get_win_lines_generator(size: int) -> list[list[tuple[int, int]]]:
-    for row in range(size):
-        row_line = []
-        for col in range(size):
-            row_line.append((row, col))
-        yield row_line
-
-    for col in range(size):
-        col_line = []
-        for row in range(size):
-            col_line.append((row, col))
-        yield col_line
-
-    diagonal = []
-    for row_col in range(size):
-        diagonal.append((row_col, row_col))
-    yield diagonal
-
-    diagonal = []
-    for row_col in range(size):
-        diagonal.append((row_col, size - 1 - row_col))
-    yield diagonal
 
 
 def init_grid(size: int, value: str) -> list[list[str]]:

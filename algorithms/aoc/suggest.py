@@ -69,4 +69,4 @@ def show_incomplete():
 if __name__ == '__main__':
     show_incomplete()
     print()
-    suggest_puzzle(15, [2023])
+    suggest_puzzle(18, [2023])

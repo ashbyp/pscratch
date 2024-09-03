@@ -44,7 +44,7 @@ def add_candidates_to_routes(data: str, x: int, y: int, routes: List[Tuple[str, 
         routes.append((data + direction, move(x, y, direction)))
 
 
-def solution(data: str):
+def part2(data: str):
     routes = []
     add_candidates_to_routes(data, 0, 0, routes)
     all_routes = []
@@ -58,13 +58,14 @@ def solution(data: str):
             add_candidates_to_routes(path, x, y, routes)
 
     all_routes.sort(key=len)
-    print(f"Shortest path: {all_routes[0]}")
-    print(f"Longest path: {all_routes[-1]}")
-    print(f"Length of longest path: {len(all_routes[-1]) - len(data)}")
+    if all_routes:
+        print(f"Shortest path: {all_routes[0]}")
+        print(f"Longest path: {all_routes[-1]}")
+        print(f"Length of longest path: {len(all_routes[-1])}")
 
 
 def main():
-    solution(pdata)
+    part2(pdata)
 
 
 if __name__ == '__main__':

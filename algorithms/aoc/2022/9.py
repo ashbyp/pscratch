@@ -2019,31 +2019,13 @@ DIRECTIONS = {
 }
 
 
-def is_touching(head, tail):
-    return (abs(head[0] - tail[0]) < 2) and (abs(head[1] - tail[1]) < 2)
-
-
 def catch(head, tail, visited) -> tuple[int, int]:
-    v = 0
-    x = tail[0]
-    y = tail[1]
-
+    x, y = tail
     visited.add((x, y))
 
-    while not is_touching(head, (x, y)):
-        # print(head, (x, y))
-        if abs(x - head[0]) > 0:
-            if x > head[0]:
-                x -= 1
-            else:
-                x += 1
-            # print('new x: ' + str(x))
-        if abs(y - head[1]) > 0:
-            if y > head[1]:
-                y -= 1
-            else:
-                y += 1
-            # print('new y: ' + str(y))
+    while abs(head[0] - x) > 1 or abs(head[1] - y) > 1:
+        x += 1 if x < head[0] else -1 if x > head[0] else 0
+        y += 1 if y < head[1] else -1 if y > head[1] else 0
         visited.add((x, y))
 
     return x, y

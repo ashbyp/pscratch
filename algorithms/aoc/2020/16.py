@@ -323,18 +323,27 @@ def part2(data: str, debug: bool = False):
         if valid_ticket:
             filtered.append(ticket)
 
+    acc = 1
+    found = set()
 
     for field in range(0,len(tickets[0])):
         for name, values in specs.items():
+            if name in found: continue
             ok = True
-            for ticket in tickets:
+            for ticket in filtered:
                 if ticket[field] not in values:
                     ok = False
                     break
             if ok:
                 print(name, field)
+                found.add(name)
                 if name.startswith('departure'):
                     print(f'{name} = {my_ticket[field]}')
+                    acc *= my_ticket[field]
+                    # found.add(name)
+                    break
+
+    print(acc)
 
 
 

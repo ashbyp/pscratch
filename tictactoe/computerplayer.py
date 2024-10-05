@@ -20,18 +20,15 @@ class ComputerPlayer(Player):
         return None
 
     def check_win(self, grid: list[list[str]], size: int) -> tuple[int, int] | None:
-        try:
-            for win_line in utils.get_win_lines(size):
-                free = [x for x in win_line if grid[x[0]][x[1]] == Game.BLANK]
-                if len(free) == 1:
-                    mine = [x for x in win_line if grid[x[0]][x[1]] == self.symbol]
-                    # there is one free slot, check to see if the others are filled by me
-                    if len(mine) == size - 1:
-                        return free[0]
-            return None
-        except:
-            print(utils.get_win_lines(size))
-            print('args')
+        for win_line in utils.get_win_lines(size):
+            free = [x for x in win_line if grid[x[0]][x[1]] == Game.BLANK]
+            if len(free) == 1:
+                mine = [x for x in win_line if grid[x[0]][x[1]] == self.symbol]
+                # there is one free slot, check to see if the others are filled by me
+                if len(mine) == size - 1:
+                    return free[0]
+        return None
+
 
     def choose_potential_win(self, grid: list[list[str]], size: int) -> tuple[int, int] | None:
         for win_line in utils.get_win_lines(size):

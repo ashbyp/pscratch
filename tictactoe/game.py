@@ -34,12 +34,16 @@ class Game:
         return False
 
     def check_winner(self, grid: list[list[str]]) -> str | None:
-        for win_set in utils.get_win_lines(self.grid_size):
-            if all(grid[x[0]][x[1]] == Game.NOUGHT for x in win_set):
-                return Game.NOUGHT
-            if all(grid[x[0]][x[1]] == Game.CROSS for x in win_set):
-                return Game.CROSS
-        return None
+        try:
+            for win_set in utils.get_win_lines(self.grid_size):
+                if all(grid[x[0]][x[1]] == Game.NOUGHT for x in win_set):
+                    return Game.NOUGHT
+                if all(grid[x[0]][x[1]] == Game.CROSS for x in win_set):
+                    return Game.CROSS
+            return None
+        except:
+            print(utils.get_win_lines(self.grid_size))
+            print('args')
 
     def play(self) -> bool:
         p1 = self.player1

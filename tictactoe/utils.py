@@ -7,7 +7,8 @@ def get_win_lines(size: int) -> list[list[tuple[int, int]]]:
     all_lines += [[(row, col) for col in range(size)] for row in range(size)]
     all_lines += [[(col, row) for col in range(size)] for row in range(size)]
     all_lines += [[(c, c) for c in range(size)]]
-    all_lines += [[(c, size - c) for c in range(size)]]
+    all_lines += [[(c, size - 1 - c) for c in range(size)]]
+
     return all_lines
 
 

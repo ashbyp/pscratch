@@ -65,8 +65,16 @@ def show_incomplete():
                 print(f' {day:2}', end='')
         print()
 
+def create_next(year: int):
+    not_complete = sorted(
+        (p for p in not_completed() if p.year == year),
+        key=lambda p: p.year
+    )
+    create_file(not_complete.pop(0))
+
 
 if __name__ == '__main__':
-    show_incomplete()
-    print()
-    suggest_puzzle(18, [2023])
+    # show_incomplete()
+    # print()
+    # suggest_puzzle(18, [2023])
+    create_next(2024)

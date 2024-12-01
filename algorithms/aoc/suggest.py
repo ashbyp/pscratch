@@ -67,7 +67,7 @@ def show_incomplete():
 
 def create_next(year: int):
     not_complete = sorted(
-        (p for p in not_completed() if p.year == year),
+        filter(lambda p: p.year == year, not_completed()),
         key=lambda p: p.year
     )
     create_file(not_complete.pop(0))

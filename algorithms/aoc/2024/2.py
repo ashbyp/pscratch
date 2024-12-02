@@ -1028,12 +1028,7 @@ def part2(data: str, debug: bool = False):
 
 
 def part1(data: str, debug: bool = False):
-    t = 0
-    for line in data.splitlines():
-        nums = list(map(int, line.split()))
-        if safe(nums):
-            t += 1
-    print(t)
+    print(sum(safe(list(map(int, line.split()))) for line in data.splitlines()))
     
 
 def main():

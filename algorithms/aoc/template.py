@@ -6,11 +6,11 @@ pdata = """"""
 tdata = """"""
 
 
-def part2(data: str, debug: bool = False):
+def part2(data: str, _debug: bool = False):
     pass
 
 
-def part1(data: str, debug: bool = False):
+def part1(data: str, _debug: bool = False):
     pass
 
 

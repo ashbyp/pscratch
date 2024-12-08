@@ -863,20 +863,16 @@ tdata = """190: 10 19
 292: 11 6 16 20"""
 
 
-def find2(target: int, nums: list[int]) -> bool:
-    if len(nums) == 1:
-        return target == nums[0]
-    first, second = nums[:2]
-    return (
-            find2(target, [first + second, *nums[2:]])
-            or find2(target, [first * second, *nums[2:]])
-            or find2(target, [int(str(first) + str(second)), *nums[2:]])
-    )
+def find2(target, cur, nums, idx) -> bool:
+    if idx == len(nums): return cur == target
+    if cur > target: return False
+    return (find2(target, cur + nums[idx], nums, idx + 1) or
+            find2(target, cur * nums[idx], nums, idx + 1) or
+            find2(target, int(str(cur) + str(nums[idx])), nums, idx + 1))
 
 
 def find1(target, cur, nums, idx):
-    if cur == target: return True
-    if idx > len(nums) - 1: return False
+    if idx == len(nums): return cur == target
     if cur > target: return False
     return find1(target, cur + nums[idx], nums, idx + 1) or find1(target, cur * nums[idx], nums, idx + 1)
 
@@ -887,7 +883,7 @@ def part2(data: str, _debug: bool = False):
         bef, aft = line.split(':')
         target = int(bef)
         nums = list(map(int, aft.split()))
-        if find2(target, nums):
+        if find2(target, 0, nums, 0):
             if _debug:
                 print('Match: ', target, nums)
             total += target

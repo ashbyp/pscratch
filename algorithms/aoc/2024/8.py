@@ -98,8 +98,8 @@ tdata="""............
 ............
 ............"""
 
-def draw_grid(grid, n_rows, n_cols, antinodes=None):
-    overrides = antinodes if antinodes else set()
+def draw_grid(grid, n_rows, n_cols, anti_nodes=None):
+    overrides = anti_nodes if anti_nodes else set()
 
     for r in range(n_rows):
         for c in range(n_cols):
@@ -119,24 +119,23 @@ def part2(data: str, _debug: bool = False):
     n_rows = len(grid)
     n_cols = len(grid[0])
 
-    all_locs = set()
-
     if _debug:
         draw_grid(grid, n_rows, n_cols)
 
     from collections import defaultdict
     antennas = defaultdict(list)
+    anti_nodes = set()
 
     for r in range(n_rows):
         for c in range(n_cols):
             if grid[r][c] != '.':
                 antennas[grid[r][c]].append((r, c))
-                all_locs.add((r, c))
+                anti_nodes.add((r, c))
 
     if _debug:
         print(antennas)
 
-    antinodes = set()
+
 
     from itertools import combinations
 
@@ -144,7 +143,7 @@ def part2(data: str, _debug: bool = False):
         pts = antennas[A]
         if _debug:
             print('Processing', pts)
-        for a, b in sorted(combinations(pts, 2)):
+        for a, b in combinations(pts, 2):
             dr, dc = abs(a[0] - b[0]), abs(a[1] - b[1])
             if _debug:
                 print('  Processing pair', a, b, 'dr=', dr, 'dc=', dc)
@@ -163,26 +162,26 @@ def part2(data: str, _debug: bool = False):
                     p2 = b[0] + dr * i, b[1] - dc * i
 
                 if _debug:
-                    print('  Anitonodes', p1, p2)
+                    print('  Anti nodes', p1, p2)
 
                 added = False
                 if in_grid(*p1, n_rows, n_cols):
-                    antinodes.add(p1)
+                    anti_nodes.add(p1)
                     added = True
                 if in_grid(*p2, n_rows, n_cols):
-                    antinodes.add(p2)
+                    anti_nodes.add(p2)
                     added = True
 
                 if not added: break
 
                 i += 1
 
-            if _debug: draw_grid(grid, n_rows, n_cols, antinodes)
+            if _debug: draw_grid(grid, n_rows, n_cols, anti_nodes)
 
     if _debug:
-        print('Final antinodes: ', antinodes)
+        print('Final anti nodes: ', anti_nodes)
 
-    print(len(antinodes.union(all_locs)))
+    print(len(anti_nodes))
 
 
 def part1(data: str, _debug: bool = False):
@@ -204,7 +203,7 @@ def part1(data: str, _debug: bool = False):
     if _debug:
         print(antennas)
 
-    antinodes = set()
+    anti_nodes = set()
 
     from itertools import combinations
 
@@ -212,7 +211,7 @@ def part1(data: str, _debug: bool = False):
         pts = antennas[A]
         if _debug:
             print('Processing', pts)
-        for a, b in sorted(combinations(pts, 2)):
+        for a, b in combinations(pts, 2):
             dr, dc = abs(a[0] - b[0]), abs(a[1] - b[1])
             if _debug:
                 print('  Processing pair', a, b, 'dr=', dr, 'dc=', dc)
@@ -229,17 +228,17 @@ def part1(data: str, _debug: bool = False):
                 p2 = b[0] + dr, b[1] - dc
 
             if _debug:
-                print('  Anitonodes', p1, p2)
+                print('  Anti nodes', p1, p2)
 
-            if in_grid(*p1, n_rows, n_cols): antinodes.add(p1)
-            if in_grid(*p2, n_rows, n_cols): antinodes.add(p2)
+            if in_grid(*p1, n_rows, n_cols): anti_nodes.add(p1)
+            if in_grid(*p2, n_rows, n_cols): anti_nodes.add(p2)
 
-            if _debug: draw_grid(grid, n_rows, n_cols, antinodes)
+            if _debug: draw_grid(grid, n_rows, n_cols, anti_nodes)
 
     if _debug:
-        print('Final antinodes: ', antinodes)
+        print('Final anti nodes: ', anti_nodes)
 
-    print(len(antinodes))
+    print(len(anti_nodes))
 
 
 def main():
@@ -253,10 +252,12 @@ def main():
             elapsed_ms = (timeit.default_timer() - start) * 1000
             print(f'Time {elapsed_ms:.10f} ms ------------')
 
-    run("Part 1 test", tdata, part1, True)
+    run("Part 1 test", tdata, part1, False)
     run("Part 1 puzzle", pdata, part1, False)
-    run("Part 2 test", tdata, part2, True)
+    run("Part 2 test", tdata, part2, False)
     run("Part 2 puzzle", pdata, part2, False)
+
+    # 14 222 34 884
 
 
 if __name__ == '__main__':

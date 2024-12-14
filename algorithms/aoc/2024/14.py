@@ -526,9 +526,9 @@ X = 7623
 
 
 def p(w, h, pos):
-    for row in range(h):
-        for col in range(w):
-            if (col, row) in pos:
+    for y in range(h):
+        for x in range(w):
+            if (x, y) in pos:
                 print('#', end='')
             else:
                 print(' ', end='')

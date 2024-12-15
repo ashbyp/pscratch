@@ -73,7 +73,6 @@ v<^vvv>vv<^v<v^^v<vvv>^^>^<v<^vv><>v<>vv^>^^><^^<<<^<>v><v<>><^<>^v^<><><<<><<v<
 ^<^^^<><^^v<v><<^<<^<<>>v^<<vv<<^^><>^^^<>><>>>^<vvvvv^<>v<v^^>><vvv^<>v^>^<><v^^>>^><>>^v>^vvv^^vv<v>>v^<v<vvv>v<>^>>vv^^>v<vv<<<>v^^^<<>>>>v<<^v^^^>^<^^><>><<vv<<><>>v^vv>^><<><^^>><vv^>>>^<^v^<<<>^^v<>vv>>><^^^<v>v<>><<vv<>v^>v>>v<>^^><>^>v<^>^vvv^>^>^vv<^>^>^v^>v<<v<<^^^>>>>v>>v<<<<^<^<v><><vv^>>><>vv<<v^v><<^^v<^<>^v^v^>vv^>v^vvv><<v^<<^^v<<^^<<><vvv^<>vv>v<<vvv>^<v^v<>v>^^vvv><^v<<v^>><^vv^^^^v>>>>v<<>>>v^>^^<<>^^v^<^<^vv^>>><v^>>>^v^>v^^<^>vvv<>^^v^<v<<v^><>^^<><>^^>^^vv<><^>v^<><^vv^v>^>v<>v^^v<^>v><<v<<<<v^^^><vvvv^<v<>^v>^^v<<^<vv^v^<<<vv>v^v<^v^^<<^>>v^v>^v^>^<<^>v<<><^<^^vv>^v<vvv>v^^<^>^<^<^vv^^v>^<^^v<><^<^^vv<v^v<<vvvvv^v><v<<^^vvv^v^^>><>vv><<<><^>^v<>vv>vv^>^v><v<v<v<><v<<^<>^>>vv^v><^>>v><>^^v>^<<><vv>^<^v><>>>^<vv>^^vv^>><>>v<<><>vvv>^^v><^<>>>^>v><^>><^v>^<<v<^vv>^v^<^v<<v<v^>>v^v<^^v<^<v>>>>^v^>v^>^>>v<^^><<><><^>^>>^>^^^^^v^^<vv^>v^<>vvv^><v>^<><vv><>v<<><vv>v^<>v<^^^vv<v^<>>>>^vv>v<<>v<>^>>>v>^v>>^<<<><^vv^>>>>v<^v<^>v>><<v<<vv<<>^<><<>^v^<>vvv>vv<><v>>v^><<<<v^>
 >vv>v<^vv^^v>v>^^^<>vvv<^<>vv^^vvv>>v^<><^v<^v>>>>>^<<v<^^^><vv>^<^>v^^>v<>>>v^v>^^v^>^v<v>v<><>^^<^^^^>^^<<><^<>^^>v><^v>v^>vvv>>^>v><^<<>^v<v<>^^vv><^^<v<^v>>>^v>>>^<>v^^><v^<^<<<<<v^<^vvvv<v<v<<v><v>^<vv<<<v>>v^^<>v>^<>>^>v^<^<^^v^^<<v<^>^vvv>^<^v^<^<<vv<v^>>v<<vvv>>><v<v<vv^v><><>>>v><v><v<<^^>^<><><><>^<^<^^<<<v<v>>^vv^>>>v^>^vv^>^>^<v>><^v<><><>>>>v<^v^>vvv>v^<^^^>v^<^<^v<v^v<^<v<v>>>>v^v>>>^>vv^><^^>vv<^^<v>>^>^^<vv<^<vvv^v>vv^<><>>vvv><vv^<^vvv><^^>>v^^^<>v^^<<>v>>^<^v<>^>>vv<^vv>^^>>v^v^<<^^>^<<^^^<>v^^^^^<^^v<>^^><<><^^<^^>><^>>>>vv<v<v^<><>>^<vv><<vv>vvv^^vv^<><v<>^<v^vv><^vv>v<>>^>^<v<>v<>^<>^><^<^>vvv^^^<>v<>^v^v<^^^vv<><^<v>v^<^^<v>^<<<<>>^><<^v>vv<<^v<v<>v^v>vv<^v>^<<^^>vvv<>v^><^^>^^<<<<^vv<v<<^^<^<<v^>>v<^v>vv<><^v^vv^<<>^<>>>^>>>^><<v><^<><><^<^<>>v<^>v<^><<v<v^><><v^v^<v^vv^v<v><<<>^^><vv^^v>^vv>^>v^<v>><<<<^>^^<<^v<<<^>vv><<<>^^<^^^<v<>>v^>^>v<>v<^><<<v>^>^^>v^^<vvv<>^>vv>v<>^>>^v<^<><<>>>v^v<><<vv^><^<>>><vvv<vv<v>vv^><^<^>>^<>><<<^<^vv^<<^>v^<<><>>^>>v><<^>><^v<>^"""
 
-
 tdata = """##########
 #..O..O.O#
 #......O.#
@@ -107,7 +106,7 @@ v^^>>><<^^<>>^v^<v^vv<>v^<<>^<^v^v><^<<<><<^<v><v<>vv>>v><v^<vv<>v^<<^"""
 #
 # <^^>>>vv<v>>v<<"""
 
-tdata="""#######
+tdata = """#######
 #...#.#
 #.....#
 #..OO@#
@@ -123,15 +122,16 @@ left = (0, -1)
 right = (0, 1)
 
 dirs = {
-    '^': (up, down),
-    'v': (down, up),
-    '<': (left, right),
-    '>': (right, left)
+    '^': up,
+    'v': down,
+    '<': left,
+    '>': right
 }
 
 
 def print_grid(grid):
     for row in grid: print(''.join(row))
+
 
 def expand(grid):
     gg = []
@@ -152,6 +152,7 @@ def expand(grid):
                 nr.append('.')
         gg.append(nr)
     return gg
+
 
 def find_robot(grid):
     for row in range(1, len(grid) - 1):
@@ -189,20 +190,8 @@ def part2(data: str, _debug: bool = False):
     #             total += r * 100 + c
 
 
-
-
-def move(grid, rr, rc, dd):
-    d = dd[0]
-    b = dd[1]
-
-    # nr, nc = rr + d[0], rc + d[1]
-    # if grid[nr][nc] == '#': return rr, rc
-    # if grid[nr][nc] == '.':
-    #     grid[rr][rc] = '.'
-    #     grid[nr][nc] = '@'
-    #     return nr, nc
-
-    found = False
+def move(grid, rr, rc, d):
+    go = False
     count = 0
     nr, nc = rr, rc
     while True:
@@ -214,17 +203,16 @@ def move(grid, rr, rc, dd):
             continue
         if grid[nr][nc] == '.':
             count += 1
-            found = True
+            go = True
             break
 
-    if found:
+    if go:
         for i in range(count):
             grid[nr][nc] = 'O'
-            nr, nc = nr + b[0], nc + b[1]
+            nr, nc = nr + d[0] * -1, nc + d[1] * -1
         grid[rr][rc] = '.'
         grid[rr + d[0]][rc + d[1]] = '@'
         rr, rc = rr + d[0], rc + d[1]
-
 
     return rr, rc
 
@@ -250,8 +238,6 @@ def part1(data: str, _debug: bool = False):
             if _debug:
                 print_grid(grid)
 
-
-
     total = 0
     for r in range(len(grid)):
         for c in range(len(grid[0])):
@@ -259,6 +245,7 @@ def part1(data: str, _debug: bool = False):
                 total += r * 100 + c
 
     print(total)
+
 
 def main():
     import timeit
@@ -272,7 +259,7 @@ def main():
             print(f'Time {elapsed_ms:.10f} ms ------------')
 
     # run("Part 1 test", tdata, part1, True)
-    # run("Part 1 puzzle", pdata, part1, False)
+    run("Part 1 puzzle", pdata, part1, False)
     run("Part 2 test", tdata, part2, True)
     # run("Part 2 puzzle", pdata, part2, False)
 

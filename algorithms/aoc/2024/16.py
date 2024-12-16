@@ -178,6 +178,7 @@ tdata = """###############
 # #################"""
 
 import sys
+
 sys.setrecursionlimit(10000)
 
 north = (-1, 0)
@@ -218,6 +219,7 @@ def find_start(grid, n_rows, n_cols):
                 return r, c
     return None
 
+
 def both_parts_recursive(data: str, _debug: bool = False):
     grid = list(line for line in data.splitlines())
     n_rows = len(grid)
@@ -243,7 +245,7 @@ def both_parts_recursive(data: str, _debug: bool = False):
         score_cache[(r, c, direction)] = score
 
         if score > min_score[0]: return
-        route = route + [(r,c)]
+        route = route + [(r, c)]
 
         if grid[r][c] == 'E':
             success.append((score, route))
@@ -279,25 +281,26 @@ def both_parts(data: str, _debug: bool = False):
     min_score = float('inf')
     score_cache = {}
 
-    q = [(start_r,start_c, east, [], 0)]
+    q = [(start_r, start_c, east, [], 0)]
 
     while q:
         r, c, direction, route, score = q.pop()
 
-        if (r, c) in route: continue
-        if grid[r][c] == '#': continue
+        if ((r, c) in route or
+            grid[r][c] == '#' or
+            score > score_cache.get((r, c, direction), float('inf')) or
+            score > min_score
+        ): continue
 
-        if (r, c, direction) in score_cache and score > score_cache[(r, c, direction)]:
-            continue
         score_cache[(r, c, direction)] = score
-
-        if score > min_score: continue
-        route = route + [(r,c)]
+        route = route + [(r, c)]
 
         if grid[r][c] == 'E':
             success.append((score, route))
-            min_score =  min(min_score, score)
-            print('found route pts=', len(route), 'score=', score, 'qsize', len(q))
+            min_score = min(min_score, score)
+            print('.', end='')
+            if len(success) % 20 == 0:
+                print()
             continue
 
         nr, nc = r + direction[0], c + direction[1]
@@ -311,9 +314,11 @@ def both_parts(data: str, _debug: bool = False):
         nr, nc = r + anti[0], c + anti[1]
         q.insert(0, (nr, nc, anti, route, score + 1000 + 1))
 
-    print('Num routes:', len(success), sorted(success)[0])
+    print()
+    print('Num routes:', len(success))
     print('Min score: ', min_score)
-    print('Unique points', len({point for score, points in success if score == min_score for point in points}))
+    print('Unique points:', len({point for score, points in success if score == min_score for point in points}))
+
 
 def main():
     import timeit
@@ -330,8 +335,6 @@ def main():
     # run("Both", pdata, both_parts_recursive, False)
     run("Both", tdata, both_parts, False)
     run("Both", pdata, both_parts, False)
-
-
 
 
 if __name__ == '__main__':

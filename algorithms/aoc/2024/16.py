@@ -186,7 +186,7 @@ south = (1, 0)
 west = (0, -1)
 east = (0, 1)
 
-compass = (north, south, east, west)
+compass = (north, east, south, west)
 clockwise = {
     north: east,
     south: west,
@@ -281,18 +281,18 @@ def both_parts(data: str, _debug: bool = False):
     min_score = float('inf')
     score_cache = {}
 
-    q = [(start_r, start_c, east, [], 0)]
+    q = [(start_r, start_c, 1, [], 0)]
 
     while q:
-        r, c, direction, route, score = q.pop()
+        r, c, d, route, score = q.pop()
 
         if ((r, c) in route or
             grid[r][c] == '#' or
-            score > score_cache.get((r, c, direction), float('inf')) or
+            score > score_cache.get((r, c, d), float('inf')) or
             score > min_score
         ): continue
 
-        score_cache[(r, c, direction)] = score
+        score_cache[(r, c, d)] = score
         route = route + [(r, c)]
 
         if grid[r][c] == 'E':
@@ -303,15 +303,15 @@ def both_parts(data: str, _debug: bool = False):
                 print()
             continue
 
-        nr, nc = r + direction[0], c + direction[1]
-        q.insert(0, (nr, nc, direction, route, score + 1))
+        nr, nc = r + compass[d][0], c + compass[d][1]
+        q.insert(0, (nr, nc, d, route, score + 1))
 
-        clock = clockwise[direction]
-        nr, nc = r + clock[0], c + clock[1]
+        clock = (d+1) % 4
+        nr, nc = r + compass[clock][0], c + compass[clock][1]
         q.insert(0, (nr, nc, clock, route, score + 1000 + 1))
 
-        anti = anti_clockwise[direction]
-        nr, nc = r + anti[0], c + anti[1]
+        anti = (d-1) % 4
+        nr, nc = r + compass[anti][0], c + compass[anti][1]
         q.insert(0, (nr, nc, anti, route, score + 1000 + 1))
 
     print()

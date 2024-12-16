@@ -273,15 +273,13 @@ def both_parts_recursive(data: str, _debug: bool = False):
 
 def both_parts(data: str, _debug: bool = False):
     grid = list(line for line in data.splitlines())
-    n_rows = len(grid)
-    n_cols = len(grid[0])
-    start_r, start_c = find_start(grid, n_rows, n_cols)
+    n_rows, n_cols = len(grid), len(grid[0])
 
     success = []
     min_score = float('inf')
     score_cache = {}
 
-    q = [(start_r, start_c, 1, [], 0)]
+    q = [(*find_start(grid, n_rows, n_cols), 1, [], 0)]
 
     while q:
         r, c, d, route, score = q.pop()
@@ -303,16 +301,9 @@ def both_parts(data: str, _debug: bool = False):
                 print()
             continue
 
-        nr, nc = r + compass[d][0], c + compass[d][1]
-        q.insert(0, (nr, nc, d, route, score + 1))
-
-        clock = (d+1) % 4
-        nr, nc = r + compass[clock][0], c + compass[clock][1]
-        q.insert(0, (nr, nc, clock, route, score + 1000 + 1))
-
-        anti = (d-1) % 4
-        nr, nc = r + compass[anti][0], c + compass[anti][1]
-        q.insert(0, (nr, nc, anti, route, score + 1000 + 1))
+        q.insert(0, (r + compass[d][0], c + compass[d][1], d, route, score + 1))
+        q.insert(0, (r + compass[(d+1) % 4][0],c +  compass[(d+1) % 4][1], (d+1) % 4, route, score + 1000 + 1))
+        q.insert(0, (r + compass[(d+3) % 4][0], c + compass[(d+3) % 4][1], (d+3) % 4, route, score + 1000 + 1))
 
     print()
     print('Num routes:', len(success))

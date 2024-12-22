@@ -46,7 +46,7 @@ def generate_sequence(start, end, type):
     if start == end:
         return ''
 
-    print('X')
+    # print('X')
 
     if type == NPAD: coordinates = _NPAD
     else: coordinates = _DPAD
@@ -80,7 +80,6 @@ def generate_sequence(start, end, type):
 
     return ''.join(sorted_seqennce)
 
-@functools.cache
 def robot(seq):
 
     print('len', len(seq))
@@ -111,7 +110,7 @@ def part2(data: str, _debug: bool = False):
                 if X == 15:
                     print('here')
                 x = robot(x)
-                print(X, end=',')
+                # print(X, end=',')
             print()
 
             robot_seq += x
@@ -144,15 +143,15 @@ def part1(data: str, _debug: bool = False):
                 for k in range(0, len(rseq) - 1):
                     robot1_seq += generate_sequence(rseq[k], rseq[k + 1], DPAD) + 'A'
 
-        print('code', code)
-        print('num ', num_seq)
-        print('rob1', robot_seq)
-        print('rob2', robot1_seq)
-        print('len:', len(robot1_seq))
+        # print('code', code)
+        # print('num ', num_seq)
+        # print('rob1', robot_seq)
+        # print('rob2', robot1_seq)
+        # print('len:', len(robot1_seq))
 
         code = int(code.lstrip('0').replace('A', ''))
         l = len(robot1_seq)
-        print(f'{l} * {code} = {l * code}')
+        # print(f'{l} * {code} = {l * code}')
         tot += l * code
 
     print('Total', tot)
@@ -170,7 +169,7 @@ def main():
             print(f'Time {elapsed_ms:.10f} ms ------------')
 
     # run("Part 1 test", tdata, part1, True)
-    # run("Part 1 puzzle", pdata, part1, False)  # 105458
+    run("Part 1 puzzle", pdata, part1, False)  # 105458
     # run("Part 2 test", tdata, part2, True)
     run("Part 2 puzzle", pdata, part2, False)
 

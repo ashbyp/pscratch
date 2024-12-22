@@ -1733,7 +1733,7 @@ def prune(n: int) -> int:
     return n % 16777216
 
 
-def next(sec: int) -> int:
+def next1(sec: int) -> int:
     n = sec * 64
     n = mix(sec, n)
     sec = prune(n)
@@ -1747,6 +1747,13 @@ def next(sec: int) -> int:
     n = mix(sec, n)
     sec = prune(n)
 
+    return sec
+
+
+def next(sec: int) -> int:
+    sec = (sec ^ (sec * 64)) % 16777216
+    sec = (sec ^ int(sec / 32)) % 16777216
+    sec = (sec ^ (sec * 2048)) % 16777216
     return sec
 
 
@@ -1783,11 +1790,7 @@ def part2(data: str, _debug: bool = False):
         seq = get_sequences(changes)
         seqs.append(seq)
 
-    all_seqs = []
-    for s in seqs:
-        all_seqs = all_seqs + list(s.keys())
-
-    all_seqs = set(all_seqs)
+    all_seqs = {key for seq in seqs for key in seq}
 
     res = []
     for seq in all_seqs:
@@ -1797,14 +1800,7 @@ def part2(data: str, _debug: bool = False):
                 tot += s[seq]
         res.append((seq, tot))
 
-    max_seq = None
-    max_num = 0
-    for r in res:
-        if r[1] > max_num:
-            max_seq = r[0]
-            max_num = r[1]
-
-    print(max_seq, max_num)
+    print(max(res, key=lambda i: i[1]))
 
 
 def part2_broke(data: str, _debug: bool = False):

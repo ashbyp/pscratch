@@ -3420,6 +3420,7 @@ print(len(data.splitlines()))
 
 g = parse_edgelist(data.splitlines(), delimiter='-')
 tot = 0
+# finds all cliques (e.g: including single nodes, edges, triangles)
 for c in enumerate_all_cliques(g):
     if len(c) == 3 and any(n.startswith('t') for n in c):
         tot += 1
@@ -3428,6 +3429,7 @@ print(g)
 print(tot)
 
 l = []
+# finds only maximal clique - which is a clqiue that cannot be extended - not necessarily the largest clique in te graph
 for x in find_cliques(g):
     if len(x) > len(l):
         l = x

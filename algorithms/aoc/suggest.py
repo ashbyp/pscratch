@@ -77,4 +77,4 @@ if __name__ == '__main__':
     # show_incomplete()
     # print()
     # suggest_puzzle(18, [2023])
-    create_next(2024)
+    create_next(2025)
